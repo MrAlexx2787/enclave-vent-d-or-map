@@ -805,23 +805,26 @@
       }
     }
 
-    async function syncOwnersToServer() {
-      if (!SHEET_API_URL) return;
-      try {
-        const resp = await fetch(SHEET_API_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ action: "saveAll", owners })
-        });
-        if (!resp.ok) throw new Error("HTTP " + resp.status);
-      } catch (err) {
-        console.error("Erreur de synchronisation avec la feuille Google.", err);
-        alert(
-          "Attention : la synchronisation avec la feuille Google a échoué.\n" +
-          "Les données sont quand même sauvegardées localement sur cet appareil."
-        );
-      }
-    }
+   async function syncOwnersToServer() {
+  if (!SHEET_API_URL) return;
+  try {
+    // On utilise no-cors et aucun header spécial pour éviter le préflight CORS.
+    // Le script Apps Script lit toujours e.postData.contents comme une chaîne JSON.
+    await fetch(SHEET_API_URL, {
+      method: "POST",
+      mode: "no-cors",
+      body: JSON.stringify({ action: "saveAll", owners })
+    });
+    // En mode no-cors on ne peut pas lire la réponse, mais ce n'est pas grave :
+    // on considère que la synchro est "best effort" (la sauvegarde locale reste la référence).
+  } catch (err) {
+    console.error("Erreur de synchronisation avec la feuille Google.", err);
+    alert(
+      "Attention : la synchronisation avec la feuille Google a échoué.\n" +
+      "Les données sont quand même sauvegardées localement sur cet appareil."
+    );
+  }
+}
 
     const tooltip = document.getElementById("tooltip");
     const tooltipTitle = tooltip.querySelector(".tooltip-title");
