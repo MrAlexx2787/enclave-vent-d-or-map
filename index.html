@@ -846,6 +846,7 @@
         case "mine": return "Minage";
         case "herboristerie": return "Herboristerie";
         case "depecage": return "Dépeçage";
+        case "archeologie": return "Archéologie";
         default: return code;
       }
     }
@@ -864,6 +865,7 @@
       "mine": "icone_mine.png",
       "herboristerie": "icone_herboristerie.png",
       "depecage": "icone_depecage.png"
+      "archeologie": "icone_archeologie.png",
     };
 
     const JOB_SYNONYMS = {
@@ -881,6 +883,8 @@
       "depeceur": "depecage",
       "dépeceuse": "depecage",
       "depeceuse": "depecage"
+      "archéologue": "archeologie",
+      "archeologue": "archeologie",
     };
 
     function updatePlotColors() {
@@ -1393,6 +1397,7 @@
       { value: "mine", label: "Minage" },
       { value: "herboristerie", label: "Herboristerie" },
       { value: "depecage", label: "Dépeçage" }
+      { value: "archeologie", label: "Archéologie" },
     ];
 
     function fillJobSelect(sel) {
