@@ -713,12 +713,14 @@
       </div>
 
       <div class="form-row">
-        <label>Métiers (jusqu'à 4) :</label>
-        <select id="job1"></select>
-        <select id="job2"></select>
-        <select id="job3"></select>
-        <select id="job4"></select>
+      <label>Métiers (jusqu'à 5) :</label>
+      <select id="job1"></select>
+      <select id="job2"></select>
+      <select id="job3"></select>
+      <select id="job4"></select>
+      <select id="job5"></select>
       </div>
+
 
       <div class="form-row">
         <label for="owner-note">Note interne :</label>
@@ -1313,6 +1315,7 @@
     const job2         = document.getElementById("job2");
     const job3         = document.getElementById("job3");
     const job4         = document.getElementById("job4");
+    const job5         = document.getElementById("job5");
     const noteInput    = document.getElementById("owner-note");
     const deleteBtn    = document.getElementById("delete-owner");
     const generateDeedBtn = document.getElementById("generate-deed");
@@ -1411,6 +1414,7 @@
     fillJobSelect(job2);
     fillJobSelect(job3);
     fillJobSelect(job4);
+    fillJobSelect(job5);
 
     (function initRecFilterJobs() {
       if (!recFilterJobSelect) return;
@@ -1434,20 +1438,60 @@
       });
     })();
 
+function refreshJobDropdowns() {
+  const selects = [job1, job2, job3, job4, job5];
+
+  // valeurs actuellement choisies (non vides)
+  const chosen = selects
+    .map(s => s.value)
+    .filter(v => v !== "");
+
+  selects.forEach(sel => {
+    const current = sel.value;
+
+    Array.from(sel.options).forEach(opt => {
+      const val = opt.value;
+
+      // "(Rien)" jamais désactivé
+      if (val === "") {
+        opt.disabled = false;
+        return;
+      }
+
+      // si ce métier est choisi ailleurs, on le grise
+      if (chosen.includes(val) && val !== current) {
+        opt.disabled = true;
+      } else {
+        opt.disabled = false;
+      }
+    });
+  });
+}
+
+[job1, job2, job3, job4, job5].forEach(sel => {
+  sel.addEventListener("change", refreshJobDropdowns);
+});
+
+// état initial propre
+refreshJobDropdowns();
+
     function refreshForm(id) {
       const o = owners[id];
       if (!o) {
-        inputName.value = "";
-        selectGender.value = "";
-        daySelect.value = "";
-        monthSelect.value = "";
-        yearSelect.value = "";
-        job1.value = "";
-        job2.value = "";
-        job3.value = "";
-        job4.value = "";
-        noteInput.value = "";
-        return;
+  inputName.value = "";
+  selectGender.value = "";
+  daySelect.value = "";
+  monthSelect.value = "";
+  yearSelect.value = "";
+  job1.value = "";
+  job2.value = "";
+  job3.value = "";
+  job4.value = "";
+  job5.value = "";
+  noteInput.value = "";
+  refreshJobDropdowns();
+  return;
+
       }
       inputName.value = o.name || "";
       selectGender.value = o.gender || "";
@@ -1458,13 +1502,16 @@
       if (typeof o.year === "number") yearSelect.value = o.year;
       else yearSelect.value = "";
 
-      const jobs = o.jobs || [];
-      job1.value = jobs[0] || "";
-      job2.value = jobs[1] || "";
-      job3.value = jobs[2] || "";
-      job4.value = jobs[3] || "";
+const jobs = o.jobs || [];
+job1.value = jobs[0] || "";
+job2.value = jobs[1] || "";
+job3.value = jobs[2] || "";
+job4.value = jobs[3] || "";
+job5.value = jobs[4] || "";
 
-      noteInput.value = o.note || "";
+noteInput.value = o.note || "";
+refreshJobDropdowns();
+
     }
 
     selectPlot.addEventListener("change", () => {
@@ -1503,10 +1550,13 @@
       const since = day + " " + monthLabel + " " + year;
       const timestamp = new Date(year, monthIndex, day).getTime();
 
-      const jobs = [];
-      [job1, job2, job3, job4].forEach(sel => {
-        if (sel.value) jobs.push(sel.value);
-      });
+const jobs = [];
+[job1, job2, job3, job4, job5].forEach(sel => {
+  const val = sel.value;
+  if (val && !jobs.includes(val)) {
+    jobs.push(val); // sécurité anti-doublon dans les données
+  }
+});
 
       const note = noteInput.value.trim();
 
