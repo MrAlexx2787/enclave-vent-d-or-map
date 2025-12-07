@@ -5,6 +5,11 @@
   <title>Carte du Logis – Enclave du Vent d'Or</title>
 
   <style>
+.tooltip-label {
+  color: #ffd100;
+  font-weight: bold;
+}
+
     body {
       margin: 0;
       background: #222;
@@ -920,42 +925,55 @@
       });
     }
 
-    function showOwnerTooltipById(id, rect) {
-      const o = owners[id];
-      if (!o) {
-        tooltip.style.display = "none";
-        return;
-      }
-      const g = o.gender || "";
-      let t = "Résident·e";
-      if (g === "f") t = "Résidente";
-      if (g === "m") t = "Résident";
+function showOwnerTooltipById(id, rect) {
+  const o = owners[id];
+  if (!o) {
+    tooltip.style.display = "none";
+    return;
+  }
+  const g = o.gender || "";
+  let t = "Résident·e";
+  if (g === "f") t = "Résidente";
+  if (g === "m") t = "Résident";
 
-      tooltipTitle.textContent = o.name;
-      const lines = [];
-      lines.push(`${t} depuis le ${o.since}`);
+  tooltipTitle.textContent = o.name;
 
-      if (o.jobs && o.jobs.length > 0) {
-        const labels = o.jobs.map(j => getJobLabel(j, g)).filter(Boolean);
-        if (labels.length > 0) {
-          lines.push("Métiers : " + labels.join(", "));
-        }
-      }
+  const lines = [];
 
-      // NOUVEAU : Côté RP dans le tooltip
-      if (o.rpShort) {
-        lines.push("Côté RP : " + escapeHtml(o.rpShort));
-      }
+  // Ligne "résident depuis"
+  lines.push(`${t} depuis le ${escapeHtml(o.since)}`);
 
-      lines.push(`Parcelle : #${id}`);
-
-      tooltipBody.innerHTML = lines.join("<br>");
-
-      tooltip.style.top  = (rect.top + window.scrollY - 10) + "px";
-      tooltip.style.left = (rect.left + window.scrollX + rect.width / 2) + "px";
-      tooltip.style.transform = "translate(-50%, -100%)";
-      tooltip.style.display = "block";
+  // Métiers
+  if (o.jobs && o.jobs.length > 0) {
+    const labels = o.jobs.map(j => getJobLabel(j, g)).filter(Boolean);
+    if (labels.length > 0) {
+      lines.push(
+        `<span class="tooltip-label">Métiers :</span> ` +
+        labels.map(escapeHtml).join(", ")
+      );
     }
+  }
+
+  // Côté RP
+  if (o.rpShort) {
+    lines.push(
+      `<span class="tooltip-label">Côté RP :</span> ` +
+      escapeHtml(o.rpShort)
+    );
+  }
+
+  // Parcelle
+  lines.push(
+    `<span class="tooltip-label">Parcelle :</span> #${id}`
+  );
+
+  tooltipBody.innerHTML = lines.join("<br>");
+
+  tooltip.style.top  = (rect.top + window.scrollY - 10) + "px";
+  tooltip.style.left = (rect.left + window.scrollX + rect.width / 2) + "px";
+  tooltip.style.transform = "translate(-50%, -100%)";
+  tooltip.style.display = "block";
+}
 
     document.querySelectorAll(".plot").forEach(plot => {
       const id = parseInt(plot.textContent, 10);
