@@ -9,425 +9,255 @@
       margin: 0;
       background: #222;
       display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      color: #fff;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px;
+      color: white;
+      font-family: Arial, sans-serif;
     }
 
-    .container {
+    .map-container {
       position: relative;
-      margin: 20px;
-    }
-
-    .title {
-      text-align: center;
-      color: #f0e6d2;
-      margin-bottom: 10px;
-      font-size: 24px;
-      text-shadow: 0 0 5px #000;
-    }
-
-    .subtitle {
-      text-align: center;
-      color: #d0c088;
-      margin-bottom: 15px;
-      font-size: 14px;
-      text-shadow: 0 0 3px #000;
-    }
-
-    .map-wrapper {
-      position: relative;
-      display: inline-block;
-      border: 3px solid #8b5a2b;
-      box-shadow: 0 0 25px rgba(0,0,0,0.8);
+      width: 100%;
+      max-width: 1400px;
+      border: 2px solid #444;
+      margin-bottom: 12px;
+      overflow: hidden;
+      cursor: grab;
       background: #000;
+    }
+
+    .map-container:active {
+      cursor: grabbing;
     }
 
     .map-inner {
       position: relative;
-      overflow: hidden;
+      transform-origin: 0 0;
+      transition: transform 0.05s linear;
     }
 
-    .map-image {
+    .map-container img {
+      width: 100%;
       display: block;
-      max-width: 100%;
-      height: auto;
-      vertical-align: top;
     }
 
     .plot {
       position: absolute;
-      border-radius: 50%;
-      border: 2px solid #fff;
-      box-sizing: border-box;
-      cursor: pointer;
-      transition: transform 0.1s ease, box-shadow 0.1s ease;
-    }
-
-    .plot.available {
-      background-color: rgba(0, 255, 0, 0.3);
-    }
-
-    .plot.taken {
-      background-color: rgba(255, 0, 0, 0.4);
-    }
-
-    .plot.reserved {
-      background-color: rgba(255, 165, 0, 0.4);
-    }
-
-    .plot:hover {
-      transform: scale(1.08);
-      box-shadow: 0 0 10px #fff;
-    }
-
-    .plot-label {
-      position: absolute;
-      color: #fff;
-      font-size: 12px;
+      width: 26px;
+      height: 26px;
+      background-image: url("Maison_GRISE.png");
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      border: none;
+      color: white;
+      font-size: 11px;
       font-weight: bold;
-      text-shadow: 1px 1px 3px #000;
-      pointer-events: none;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 2px;
+      transform: translate(-50%, -50%);
+      pointer-events: auto;
+      text-shadow: 0 0 2px #000, 0 0 4px #000;
     }
 
-    .legend {
+    .taken {
+      background-image: url("Maison_OR.png") !important;
+    }
+
+    .focus-highlight {
+      box-shadow: 0 0 12px 4px rgba(255, 215, 0, 0.8);
+      border-radius: 50%;
+    }
+
+    .marker {
+      position: absolute;
+      width: 26px;
+      height: 26px;
+      transform: translate(-50%, -50%);
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      pointer-events: auto;
+    }
+
+    .marker-portal {
+      background-image: url("Portail.png");
+    }
+
+    .marker-flight {
+      background-image: url("Taxi.png");
+    }
+
+    .tooltip {
+      position: absolute;
+      background: #050505;
+      border: 1px solid #ffd100;
+      padding: 6px 8px;
+      font-size: 12px;
+      color: #ffffff;
+      box-shadow: 0 0 8px rgba(0,0,0,0.8);
+      z-index: 2000;
+      pointer-events: none;
+      max-width: 260px;
+      display: none;
+    }
+
+    .tooltip-title {
+      color: #ffd100;
+      font-weight: bold;
+    }
+
+    .tooltip-body {
+      margin-top: 3px;
+    }
+
+    .admin-btn {
+      background: #333;
+      color: #ffd100;
+      border: 1px solid #555;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 8px;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    .admin-btn:hover {
+      background: #444;
+    }
+
+    .admin-popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #111;
+      border: 2px solid #444;
+      padding: 20px;
+      z-index: 2500;
+      color: white;
+      display: none;
+      box-shadow: 0 0 15px rgba(0,0,0,0.8);
+    }
+
+    .admin-popup input {
+      padding: 6px;
+      width: 250px;
+      margin-bottom: 10px;
+    }
+
+    .panel {
+      width: 100%;
+      max-width: 1917px;
+      border: 1px solid #444;
+      background: #111;
+      padding: 10px 12px;
+      box-sizing: border-box;
+      margin-top: 5px;
+      margin-bottom: 15px;
+      display: none;
+    }
+
+    .form-row {
+      margin-bottom: 10px;
+    }
+
+    .form-row label {
+      margin-right: 5px;
+      display: inline-block;
+      min-width: 120px;
+    }
+
+    .form-row input,
+    .form-row select,
+    .form-row button,
+    .form-row textarea {
+      padding: 4px;
+    }
+
+    .disconnect-btn {
       margin-top: 10px;
-      background: rgba(0, 0, 0, 0.7);
-      padding: 8px 12px;
-      border-radius: 8px;
-      border: 1px solid #8b5a2b;
-      font-size: 14px;
+      background: #550000;
+      color: #fff;
+      padding: 6px 10px;
+      border: 1px solid #aa0000;
+      cursor: pointer;
+      font-size: 13px;
+      border-radius: 4px;
+    }
+
+    .disconnect-btn:hover {
+      background: #770000;
+    }
+
+    .legend-box {
+      position: absolute;
+      top: 10%;
+      right: 3%;
+      background: #050505;
+      border: 1px solid #ffd100;
+      padding: 10px 12px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.8);
+      z-index: 900;
+      max-width: 260px;
+      font-size: 13px;
+    }
+
+    .legend-header {
+      font-weight: bold;
+      color: #ffd100;
+      margin-bottom: 6px;
     }
 
     .legend-item {
       display: flex;
       align-items: center;
+      gap: 6px;
       margin-bottom: 4px;
     }
 
-    .legend-color {
-      width: 16px;
-      height: 16px;
-      border-radius: 4px;
-      border: 1px solid #fff;
-      margin-right: 8px;
-      box-sizing: border-box;
+    .legend-item input {
+      margin: 0;
     }
 
-    .legend-available {
-      background-color: rgba(0, 255, 0, 0.6);
+    .legend-icon {
+      width: 18px;
+      height: 18px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+
+    .legend-free {
+      background-image: url("Maison_GRISE.png");
     }
 
     .legend-taken {
-      background-color: rgba(255, 0, 0, 0.6);
+      background-image: url("Maison_OR.png");
     }
 
-    .legend-reserved {
-      background-color: rgba(255, 165, 0, 0.7);
+    .legend-flight {
+      background-image: url("Taxi.png");
     }
 
-    .map-controls {
-      margin-top: 10px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      align-items: center;
+    .legend-portal {
+      background-image: url("Portail.png");
     }
 
-    .map-controls label {
-      font-size: 14px;
+    .legend-separator {
+      border-top: 1px solid #ffd100;
+      margin: 6px 0 4px 0;
     }
 
-    .map-controls select,
-    .map-controls input[type="checkbox"],
-    .map-controls button {
-      margin-left: 4px;
-      font-size: 14px;
-    }
-
-    .panel {
-      margin-top: 20px;
-      background: rgba(0, 0, 0, 0.75);
-      padding: 12px 16px;
-      border-radius: 8px;
-      border: 1px solid #8b5a2b;
-      max-width: 500px;
-      color: #f0e6d2;
-    }
-
-    .panel h2 {
-      margin-top: 0;
-      color: #ffd700;
-      text-shadow: 0 0 3px #000;
-      font-size: 18px;
-    }
-
-    .form-row {
-      margin-bottom: 8px;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
-    .form-row label {
-      width: 120px;
-      font-size: 14px;
-    }
-
-    .form-row input[type="text"],
-    .form-row input[type="number"],
-    .form-row select,
-    .form-row textarea {
-      flex: 1;
-      font-size: 14px;
-      padding: 3px 5px;
-      box-sizing: border-box;
-    }
-
-    .tooltip {
-      position: absolute;
-      background: #111;
-      color: #fff;
-      padding: 8px 10px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      box-shadow: 0 0 10px rgba(0,0,0,0.8);
-      pointer-events: none;
-      font-size: 13px;
-      z-index: 999;
-      max-width: 250px;
-      display: none;
-      white-space: normal;
-    }
-
-    .tooltip-title {
+    .legend-available {
+      margin-top: 2px;
       font-weight: bold;
-      margin-bottom: 4px;
-      color: #ffd700;
-    }
-
-    .tooltip-body {
-      white-space: normal;
-    }
-
-    .map-wrapper {
-      max-width: 1000px;
-    }
-
-    .map-inner {
-      width: 100%;
-      max-width: 1000px;
-    }
-
-    .map-inner svg,
-    .map-inner img {
-      max-width: 100%;
-      height: auto;
-    }
-
-    .filters-line {
-      margin-top: 8px;
-      font-size: 14px;
-    }
-
-    .filters-line label {
-      margin-right: 10px;
-    }
-
-    .admin-btn {
-      margin-top: 10px;
-      background-color: #8b0000;
-      color: #fff;
-      border: 1px solid #ffa500;
-      padding: 6px 10px;
-      border-radius: 4px;
+      color: #ffd100;
       cursor: pointer;
-      font-size: 14px;
-    }
-
-    .admin-btn:hover {
-      background-color: #a00000;
-    }
-
-    .admin-popup {
-      position: fixed;
-      z-index: 2000;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: #111;
-      border: 1px solid #ffa500;
-      border-radius: 8px;
-      padding: 15px;
-      display: none;
-      max-width: 300px;
-      color: #fff;
-    }
-
-    .admin-popup h3 {
-      margin-top: 0;
-      text-align: center;
-      color: #ffd700;
-    }
-
-    .admin-popup input[type="password"] {
-      width: 100%;
-      margin-bottom: 8px;
-      padding: 4px;
-      box-sizing: border-box;
-    }
-
-    .admin-popup button {
-      margin-right: 6px;
-      padding: 4px 10px;
-      font-size: 14px;
-      cursor: pointer;
-    }
-
-    .badge-admin {
-      display: inline-flex;
-      align-items: center;
-      background: #004400;
-      border: 1px solid #00aa00;
-      border-radius: 4px;
-      padding: 2px 5px;
-      margin-left: 8px;
-      font-size: 12px;
-      color: #ccffcc;
-    }
-
-    .badge-admin span {
-      margin-left: 4px;
-    }
-
-    .deed-preview-container {
-      margin-top: 20px;
-      background: rgba(0,0,0,0.8);
-      border: 1px solid #8b5a2b;
-      border-radius: 8px;
-      padding: 10px;
-      max-width: 520px;
-    }
-
-    .deed-preview-title {
-      font-size: 16px;
-      margin: 0 0 10px;
-      color: #ffd700;
-      text-align: center;
-    }
-
-    .deed-preview-inner {
-      position: relative;
-      width: 100%;
-      max-width: 480px;
-      margin: 0 auto;
-    }
-
-    .deed-preview-inner img {
-      width: 100%;
-      display: block;
-    }
-
-    .deed-text-main {
-      position: absolute;
-      top: 34%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 70%;
-      text-align: center;
-      color: #2b1a07;
-      font-family: "Times New Roman", serif;
-      font-size: 14px;
-      line-height: 1.3;
-      text-shadow: none;
-    }
-
-    .deed-text-date {
-      position: absolute;
-      top: 63%;
-      left: 22%;
-      transform: translate(-50%, -50%);
-      width: 30%;
-      text-align: left;
-      color: #2b1a07;
-      font-family: "Times New Roman", serif;
-      font-size: 13px;
-      line-height: 1.2;
-    }
-
-    .deed-text-location {
-      position: absolute;
-      top: 63%;
-      left: 78%;
-      transform: translate(-50%, -50%);
-      width: 30%;
-      text-align: right;
-      color: #2b1a07;
-      font-family: "Times New Roman", serif;
-      font-size: 13px;
-      line-height: 1.2;
-    }
-
-    .deed-text-signature {
-      position: absolute;
-      bottom: 16%;
-      left: 28%;
-      transform: translate(-50%, 0);
-      width: 35%;
-      text-align: center;
-      color: #2b1a07;
-      font-family: "Times New Roman", serif;
-      font-size: 13px;
-    }
-
-    .deed-signature-image {
-      position: absolute;
-      bottom: 15%;
-      right: 20%;
-      width: 25%;
-      pointer-events: none;
-    }
-
-    .deed-download-button {
-      margin-top: 10px;
-      text-align: center;
-    }
-
-    .deed-download-button button {
-      padding: 6px 12px;
-      font-size: 14px;
-      cursor: pointer;
-      border-radius: 4px;
-      border: 1px solid #8b5a2b;
-      background: #3b2b1a;
-      color: #f0e6d2;
-    }
-
-    .deed-download-button button:hover {
-      background: #5b3b1a;
-    }
-
-    .job-pill {
-      display: inline-flex;
-      align-items: center;
-      background: rgba(0,0,0,0.6);
-      border: 1px solid #caa500;
-      border-radius: 12px;
-      padding: 2px 6px;
-      margin: 2px;
-      font-size: 12px;
-      color: #fff;
-    }
-
-    .job-pill img {
-      width: 16px;
-      height: 16px;
-      margin-right: 4px;
-    }
-
-    .gold {
-      color: #ffd700;
     }
 
     .recensement-popup {
@@ -447,17 +277,18 @@
     }
 
     .recensement-header {
-      background: #151515;
+      background: #111;
       border-bottom: 1px solid #caa500;
-      padding: 8px 12px;
+      padding: 10px;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
     .recensement-title {
+      color: #ffd100;
+      font-size: 18px;
       font-weight: bold;
-      color: #ffd700;
     }
 
     .recensement-close {
@@ -490,163 +321,303 @@
 
     .recensement-content::-webkit-scrollbar-track {
       background: #1a1a1a;
+      border-left: 1px solid #2c2c2c;
     }
 
     .recensement-content::-webkit-scrollbar-thumb {
-      background-color: #caa500;
-      border-radius: 5px;
-      border: 2px solid #1a1a1a;
+      background: #caa500;
+      border-radius: 4px;
+      border: 1px solid #000;
     }
 
-    .recensement-tabs {
-      margin-top: 10px;
-      display: flex;
-      border-bottom: 1px solid #caa500;
+    .recensement-content::-webkit-scrollbar-thumb:hover {
+      background: #ffdb47;
     }
 
-    .rec-tab {
-      flex: 1;
-      text-align: center;
-      padding: 6px 0;
-      cursor: pointer;
-      font-size: 14px;
-      border-right: 1px solid #caa500;
-      background: #111;
+    .recensement-popup:hover {
+      overscroll-behavior: contain;
     }
 
-    .rec-tab:last-child {
-      border-right: none;
+    .recensement-separator {
+      border-top: 1px solid #caa500;
+      margin: 10px 0;
     }
 
-    .rec-tab.active {
-      background: #333;
-      font-weight: bold;
-    }
-
-    .rec-tab-content {
-      margin-top: 10px;
+    .gold {
+      color: #ffd100;
     }
 
     .recensement-list-entry {
       margin-bottom: 8px;
-      padding: 6px;
-      border-bottom: 1px solid #333;
-      cursor: pointer;
+      padding-bottom: 6px;
+      border-bottom: 1px dashed #444;
     }
 
-    .recensement-list-entry:hover {
-      background: #222;
+    .recensement-list-entry:last-child {
+      border-bottom: none;
     }
 
-    .rec-note {
+    .recensement-tabs {
+      display: flex;
+      gap: 6px;
+      margin-top: 8px;
+      margin-bottom: 6px;
+    }
+
+    .rec-tab {
+      padding: 4px 8px;
+      border: 1px solid #555;
+      border-bottom: none;
+      background: #111;
       color: #ccc;
-      font-style: italic;
-      font-size: 12px;
+      cursor: pointer;
+      font-size: 13px;
+      border-radius: 4px 4px 0 0;
+    }
+
+    .rec-tab.active {
+      background: #222;
+      color: #ffd100;
+      border-color: #caa500;
+      font-weight: bold;
+    }
+
+    .rec-tab-content {
+      border-top: 1px solid #caa500;
+      padding-top: 8px;
+    }
+
+    #rec-search {
+      width: 100%;
+      max-width: 320px;
+      padding: 4px;
+      margin-top: 4px;
+      background: #111;
+      border: 1px solid #555;
+      color: #fff;
+    }
+
+    #rec-search::placeholder {
+      color: #888;
+      font-size: 11px;
+    }
+
+    #rec-filter-job {
+      margin-top: 2px;
+    }
+
+    #rec-artisans-list {
+      font-size: 13px !important;
+      text-align: left !important;
     }
 
     .artisan-job-section {
-      margin-bottom: 16px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid #333;
+      margin-bottom: 12px !important;
+      padding-bottom: 8px !important;
+      border-bottom: 1px dashed #444 !important;
+      text-align: left !important;
+    }
+
+    .artisan-job-section:last-child {
+      border-bottom: none !important;
     }
 
     .artisan-job-header {
-      display: flex;
-      align-items: center;
-      margin-bottom: 4px;
-    }
-
-    .artisan-job-title {
-      font-weight: bold;
-      font-size: 14px;
-      color: #ffd700;
-      margin-left: 6px;
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      justify-content: flex-start !important;
+      gap: 10px !important;
+      margin-bottom: 4px !important;
     }
 
     .artisan-job-icon {
-      width: 20px;
-      height: 20px;
+      width: 64px !important;
+      height: 64px !important;
+      object-fit: contain !important;
+      display: inline-block !important;
+    }
+
+    .artisan-job-title {
+      display: inline-block !important;
+      color: #ffd100 !important;
+      font-weight: bold !important;
+      font-size: 15px !important;
+      margin: 0 !important;
+      text-align: left !important;
+    }
+
+    .artisan-job-title::after {
+      content: " :" !important;
     }
 
     .artisan-job-names {
-      font-size: 13px;
-      margin-left: 26px;
+      display: block !important;
+      margin-left: 74px !important;
+      line-height: 1.5 !important;
+      text-align: left !important;
     }
 
     .artisan-name {
-      cursor: pointer;
-      text-decoration: underline;
+      cursor: pointer !important;
+      text-decoration: underline !important;
     }
 
     .artisan-name:hover {
-      color: #ffd700;
+      color: #ffd100 !important;
     }
 
-    .notice {
-      font-size: 12px;
-      color: #ccc;
+    .rec-note {
+      color: #aaaaaa;
       font-style: italic;
-      margin-top: 4px;
+      font-size: 11px;
     }
   </style>
 </head>
+
 <body>
-  <div class="container">
-    <h1 class="title">Carte du Logis – Enclave du Vent d'Or</h1>
-    <div class="subtitle">
-      Cliquez sur un emplacement pour voir les informations d'occupation.
-    </div>
 
-    <div class="map-wrapper">
-      <div class="map-inner" id="map-inner">
-        <img
-<img src="Map Logis Alliance VIERGE.png"
-     alt="Carte du logis"
-     class="map-image"
-     id="map-image" />
+  <button class="admin-btn" id="open-recensement">📜 Recensement de l'enclave du Vent d'Or</button>
 
+  <div class="map-container">
+    <div class="map-inner">
+      <img src="Map Logis Alliance VIERGE.png" alt="Carte du Logis">
 
-        <!-- CERCLES / PARCELLES -->
-        <!-- (tous les plots sont déjà placés dans la version existante) -->
-        <!-- Exemple :
-        <div class="plot" data-id="1" style="left:100px; top:150px; width:32px; height:32px;"></div>
-        <div class="plot-label" style="left:110px; top:140px;">1</div>
-        -->
-        <!-- Ici : tous les plots originaux sont conservés dans ton fichier -->
-      </div>
+      <!-- PARCELLES 0 à 54 -->
+      <div class="plot" id="plot0"  style="left: 58.7%; top: 49.5%;">0</div>
+      <div class="plot" id="plot1"  style="left: 42.5%; top: 57.1%;">1</div>
+      <div class="plot" id="plot2"  style="left: 51.3%; top: 61.3%;">2</div>
+      <div class="plot" id="plot3"  style="left: 58.4%; top: 43.8%;">3</div>
+      <div class="plot" id="plot4"  style="left: 29.2%; top: 35.2%;">4</div>
+      <div class="plot" id="plot5"  style="left: 35.9%; top: 59.1%;">5</div>
+      <div class="plot" id="plot6"  style="left: 62.3%; top: 57.3%;">6</div>
+      <div class="plot" id="plot7"  style="left: 50.1%; top: 33.2%;">7</div>
+      <div class="plot" id="plot8"  style="left: 53.9%; top: 67.5%;">8</div>
+      <div class="plot" id="plot9"  style="left: 47.9%; top: 34.5%;">9</div>
+      <div class="plot" id="plot10" style="left: 48.8%; top: 64.8%;">10</div>
+      <div class="plot" id="plot11" style="left: 52.8%; top: 51.6%;">11</div>
+      <div class="plot" id="plot12" style="left: 25.7%; top: 40.2%;">12</div>
+      <div class="plot" id="plot13" style="left: 37.6%; top: 53.6%;">13</div>
+      <div class="plot" id="plot14" style="left: 34.6%; top: 55.8%;">14</div>
+      <div class="plot" id="plot15" style="left: 51.4%; top: 55.5%;">15</div>
+      <div class="plot" id="plot16" style="left: 52.9%; top: 49.0%;">16</div>
+      <div class="plot" id="plot17" style="left: 61.0%; top: 49.8%;">17</div>
+      <div class="plot" id="plot18" style="left: 58.5%; top: 67.6%;">18</div>
+      <div class="plot" id="plot19" style="left: 33.4%; top: 39.8%;">19</div>
+      <div class="plot" id="plot20" style="left: 60.0%; top: 64.8%;">20</div>
+      <div class="plot" id="plot21" style="left: 66.3%; top: 59.5%;">21</div>
+      <div class="plot" id="plot22" style="left: 65.0%; top: 47.9%;">22</div>
+      <div class="plot" id="plot23" style="left: 65.7%; top: 39.6%;">23</div>
+      <div class="plot" id="plot24" style="left: 32.8%; top: 25.9%;">24</div>
+      <div class="plot" id="plot25" style="left: 26.6%; top: 36.8%;">25</div>
+      <div class="plot" id="plot26" style="left: 43.1%; top: 60.4%;">26</div>
+      <div class="plot" id="plot27" style="left: 49.9%; top: 30.4%;">27</div>
+      <div class="plot" id="plot28" style="left: 28.5%; top: 31.2%;">28</div>
+      <div class="plot" id="plot29" style="left: 32.4%; top: 34.4%;">29</div>
+      <div class="plot" id="plot30" style="left: 39.0%; top: 58.4%;">30</div>
+      <div class="plot" id="plot31" style="left: 61.8%; top: 39.8%;">31</div>
+      <div class="plot" id="plot32" style="left: 66.5%; top: 44.2%;">32</div>
+      <div class="plot" id="plot33" style="left: 55.8%; top: 62.7%;">33</div>
+      <div class="plot" id="plot34" style="left: 40.1%; top: 36.6%;">34</div>
+      <div class="plot" id="plot35" style="left: 36.7%; top: 63.7%;">35</div>
+      <div class="plot" id="plot36" style="left: 32.7%; top: 55.9%;">36</div>
+      <div class="plot" id="plot37" style="left: 44.8%; top: 63.4%;">37</div>
+      <div class="plot" id="plot38" style="left: 60.1%; top: 61.0%;">38</div>
+      <div class="plot" id="plot39" style="left: 41.8%; top: 33.0%;">39</div>
+      <div class="plot" id="plot40" style="left: 27.1%; top: 33.7%;">40</div>
+      <div class="plot" id="plot41" style="left: 61.0%; top: 72.4%;">41</div>
+      <div class="plot" id="plot42" style="left: 45.6%; top: 33.0%;">42</div>
+      <div class="plot" id="plot43" style="left: 32.4%; top: 30.5%;">43</div>
+      <div class="plot" id="plot44" style="left: 47.6%; top: 30.0%;">44</div>
+      <div class="plot" id="plot45" style="left: 42.2%; top: 37.2%;">45</div>
+      <div class="plot" id="plot46" style="left: 47.7%; top: 43.6%;">46</div>
+      <div class="plot" id="plot47" style="left: 47.2%; top: 39.9%;">47</div>
+      <div class="plot" id="plot48" style="left: 38.4%; top: 48.2%;">48</div>
+      <div class="plot" id="plot49" style="left: 46.9%; top: 46.4%;">49</div>
+      <div class="plot" id="plot50" style="left: 35.4%; top: 41.6%;">50</div>
+      <div class="plot" id="plot51" style="left: 44.6%; top: 39.6%;">51</div>
+      <div class="plot" id="plot52" style="left: 36.3%; top: 38.2%;">52</div>
+      <div class="plot" id="plot53" style="left: 39.7%; top: 49.9%;">53</div>
+      <div class="plot" id="plot54" style="left: 49.7%; top: 44.5%;">54</div>
 
-      <div class="legend">
-        <div class="legend-item">
-          <div class="legend-color legend-available"></div> Libre
-        </div>
-        <div class="legend-item">
-          <div class="legend-color legend-taken"></div> Occupé
-        </div>
-        <div class="legend-item">
-          <div class="legend-color legend-reserved"></div> Réservé (future maison)
-        </div>
-        <div class="legend-item">
-          <span class="gold">Emplacements disponibles :</span>
-          <span id="available-count">--</span>
-        </div>
-      </div>
+      <!-- MARKERS -->
+      <div class="marker marker-portal"
+           style="left: 57.5%; top: 26.5%;"
+           data-title="Portail vers Hurlevent"
+           data-text="Téléportation vers Hurlevent"></div>
 
-      <div class="map-controls">
-        <div class="filters-line">
-          <label>
-            <input type="checkbox" id="filter-free" checked />
-            Afficher les libres
-          </label>
-          <label>
-            <input type="checkbox" id="filter-taken" checked />
-            Afficher les occupés
-          </label>
-          <label>
-            <input type="checkbox" id="filter-reserved" checked />
-            Afficher les réservés
-          </label>
+      <div class="marker marker-flight"
+           style="left: 56.7%; top: 27.7%;"
+           data-title="Maître de vol"
+           data-text="Portail d'entrée"></div>
+
+      <div class="marker marker-flight"
+           style="left: 51.2%; top: 39.5%;"
+           data-title="Maître de vol"
+           data-text="Centre-ville"></div>
+
+      <div class="marker marker-flight"
+           style="left: 63.8%; top: 41.2%;"
+           data-title="Maître de vol"
+           data-text="Crête de la Rochevoile"></div>
+
+      <div class="marker marker-flight"
+           style="left: 56.4%; top: 58.1%;"
+           data-title="Maître de vol"
+           data-text="Creux Bois-des-Brumes"></div>
+
+      <div class="marker marker-flight"
+           style="left: 43.3%; top: 45.0%;"
+           data-title="Maître de vol"
+           data-text="Petit Nid-de-l'Aigle"></div>
+
+      <div class="marker marker-flight"
+           style="left: 34.6%; top: 34.3%;"
+           data-title="Maître de vol"
+           data-text="Ferme de Mear"></div>
+
+      <div class="marker marker-flight"
+           style="left: 32.2%; top: 45.8%;"
+           data-title="Maître de vol"
+           data-text="Les Rives des confins"></div>
+
+      <div class="marker marker-flight"
+           style="left: 38.0%; top: 62.7%;"
+           data-title="Maître de vol"
+           data-text="Chênes dorés"></div>
+
+      <div class="legend-box">
+        <div class="legend-header">Légende</div>
+
+        <label class="legend-item">
+          <input type="checkbox" id="toggle-free" checked />
+          <span class="legend-icon legend-free"></span>
+          <span>Emplacements libres</span>
+        </label>
+
+        <label class="legend-item">
+          <input type="checkbox" id="toggle-taken" checked />
+          <span class="legend-icon legend-taken"></span>
+          <span>Emplacements occupés</span>
+        </label>
+
+        <label class="legend-item">
+          <input type="checkbox" id="toggle-flight" checked />
+          <span class="legend-icon legend-flight"></span>
+          <span>Maîtres de vol</span>
+        </label>
+
+        <label class="legend-item">
+          <input type="checkbox" id="toggle-portal" checked />
+          <span class="legend-icon legend-portal"></span>
+          <span>Portail vers Hurlevent</span>
+        </label>
+
+        <div class="legend-separator"></div>
+
+        <div class="legend-available" id="available-wrapper">
+          Emplacements disponibles : <span id="available-count">--</span>
         </div>
-        <button id="open-recensement">📜 Recensement de l'enclave du Vent d'Or</button>
       </div>
 
       <!-- POPUP RECENSEMENT -->
@@ -682,7 +653,6 @@
           <div class="recensement-tabs">
             <div class="rec-tab active" id="tab-residents">Résidents</div>
             <div class="rec-tab" id="tab-artisans">Artisans</div>
-            <div class="rec-tab" id="tab-rp">Côté RP</div>
           </div>
 
           <div id="rec-residents-content" class="rec-tab-content">
@@ -691,10 +661,6 @@
 
           <div id="rec-artisans-content" class="rec-tab-content" style="display:none;">
             <div id="rec-artisans-list"></div>
-          </div>
-
-          <div id="rec-rp-content" class="rec-tab-content" style="display:none;">
-            <div id="rec-rp-list"></div>
           </div>
         </div>
       </div>
@@ -747,30 +713,19 @@
       </div>
 
       <div class="form-row">
-        <label>Métiers (jusqu'à 5) :</label>
-        <select id="job1"></select>
-        <select id="job2"></select>
-        <select id="job3"></select>
-        <select id="job4"></select>
-        <select id="job5"></select>
+      <label>Métiers (jusqu'à 5) :</label>
+      <select id="job1"></select>
+      <select id="job2"></select>
+      <select id="job3"></select>
+      <select id="job4"></select>
+      <select id="job5"></select>
       </div>
+
 
       <div class="form-row">
         <label for="owner-note">Note interne :</label>
         <textarea id="owner-note" rows="2" cols="40"
           placeholder="Visible uniquement en mode administrateur"></textarea>
-      </div>
-
-      <div class="form-row">
-        <label for="owner-rp-short">Côté RP (court) :</label>
-        <input type="text" id="owner-rp-short"
-               placeholder="Ex : Tavernier, Tavernière, Gardien, etc.">
-      </div>
-
-      <div class="form-row">
-        <label for="owner-rp-long">Description RP :</label>
-        <textarea id="owner-rp-long" rows="3" cols="40"
-          placeholder="Texte plus long affiché dans l'onglet &quot;Côté RP&quot;."></textarea>
       </div>
 
       <div class="form-row">
@@ -781,12 +736,13 @@
 
       <div class="form-row">
         <button type="button" id="backup-save">💾 Enregistrer une sauvegarde</button>
-        <button type="button" id="backup-load">📂 Restaurer une sauvegarde</button>
+        <button type="button" id="backup-load">📂 Charger une sauvegarde</button>
+        <input type="file" id="backup-file" accept=".json" style="display:none" />
       </div>
 
-      <div class="form-row">
-        <button type="button" id="admin-logout">Se déconnecter du mode administrateur</button>
-      </div>
+      <button type="button" class="disconnect-btn" id="admin-disconnect">
+        🔓 Se déconnecter du mode administrateur
+      </button>
     </form>
   </div>
 
@@ -795,172 +751,557 @@
     <div class="tooltip-body"></div>
   </div>
 
-<script>
+  <script>
     /* SHA-256 moderne via l'API du navigateur */
     async function sha256(str) {
       if (!window.crypto || !window.crypto.subtle) {
-        throw new Error("SHA-256 non supporté par ce navigateur");
+        throw new Error("SHA-256 non supporté par ce navigateur.");
       }
       const encoder = new TextEncoder();
       const data = encoder.encode(str);
-      const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+      const hashBuffer = await window.crypto.subtle.digest("SHA-256", data);
       const hashArray = Array.from(new Uint8Array(hashBuffer));
       const hashHex = hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
       return hashHex;
     }
 
-    const ADMIN_HASH =
-      "4983071bc71140bdb0f947ecaac585104672f1581b565397cf8519d244394a30";
-    const ADMIN_FLAG = "logis_enclave_admin_mode";
+    const ADMIN_HASH = "4983071bc71140bdb0f947ecaac585104672f1581b565397cf8519d244394a30";
     const OWNERS_KEY = "logis_enclave_owners";
-    const GOOGLE_APPS_SCRIPT_URL =
-      "https://script.google.com/macros/s/AKfycbz9T.../exec"; // <-- ton URL existante ici
+    const ADMIN_FLAG = "logis_enclave_admin";
+    const DEED_BASE_SRC = "Acte_propriete_base.png";
 
-    const JOBS = [
-      { value: "", label: "(Rien)" },
-      { value: "alchimie", label: "Alchimie" },
-      { value: "calligraphie", label: "Calligraphie" },
-      { value: "couture", label: "Couture" },
-      { value: "cuisine", label: "Cuisine" },
-      { value: "enchantement", label: "Enchantement" },
-      { value: "forge", label: "Forge" },
-      { value: "ingenierie", label: "Ingénierie" },
-      { value: "joaillerie", label: "Joaillerie" },
-      { value: "travail_cuir", label: "Travail du cuir" },
-      { value: "peche", label: "Pêcheur/Pêcheuse" },
-      { value: "mine", label: "Mineur/Mineuse" },
-      { value: "herboriste", label: "Herboriste" },
-      { value: "archeologie", label: "Archéologie" }
-    ];
-
-    const JOB_GENDER_LABELS = {
-      peche: { f: "Pêcheuse", m: "Pêcheur", "": "Pêcheur/Pêcheuse" },
-      mine:  { f: "Mineuse",  m: "Mineur",  "": "Mineur/Mineuse" }
-    };
-
-const JOB_ICONS = {
-  alchimie: "icone_alchimie.png",
-  archeologie: "icone_archeologie.png",
-  calligraphie: "icone_calligraphie.png",
-  couture: "icone_couture.png",
-  cuisine: "icone_cuisine.png",
-  enchantement: "icone_enchantement.png",
-  forge: "icone_forge.png",
-  ingenierie: "icone_ingenierie.png",
-  joaillerie: "icone_joaillerie.png",
-  travail_cuir: "icone_travail_du_cuir.png",
-  peche: "icone_peche.png",
-  mine: "icone_mine.png",
-  herboristerie: "icone_herboristerie.png"
-};
-
-    const JOB_SYNONYMS = {
-      forgeron: "forge",
-      forgeronne: "forge",
-      mineur: "mine",
-      mineuse: "mine",
-      pecheur: "peche",
-      pêcheur: "peche",
-      pecheuse: "peche",
-      pêcheuse: "peche",
-      herbo: "herboriste"
-    };
-
-    function getJobLabel(value, gender) {
-      if (!value) return "";
-      const g = gender || "";
-      if (JOB_GENDER_LABELS[value]) {
-        const labels = JOB_GENDER_LABELS[value];
-        return labels[g] || labels[""];
-      }
-      const job = JOBS.find(j => j.value === value);
-      return job ? job.label : "";
-    }
-
-    function saveJSON(key, data) {
-      localStorage.setItem(key, JSON.stringify(data));
-    }
+    const SHEET_API_URL = "https://script.google.com/macros/s/AKfycbzRDHnqkKrXS8C-vJHk5yMzmJf9ApWYPFnxjDqMHScLkPGjCfQpTKKYACNHQy52L3ro/exec";
 
     function loadJSON(key) {
-      const raw = localStorage.getItem(key);
-      if (!raw) return {};
       try {
-        return JSON.parse(raw);
-      } catch (e) {
-        console.error("JSON invalide pour", key, e);
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : {};
+      } catch {
         return {};
       }
     }
 
+    function saveJSON(key, data) {
+      try {
+        localStorage.setItem(key, JSON.stringify(data));
+      } catch {}
+    }
+
     let owners = loadJSON(OWNERS_KEY);
 
-    const mapInner = document.getElementById("map-inner");
-    const mapImage = document.getElementById("map-image");
-    const tooltip  = document.getElementById("tooltip");
-    const tooltipTitle = tooltip.querySelector(".tooltip-title");
-    const tooltipBody  = tooltip.querySelector(".tooltip-body");
-
-    const filterFree     = document.getElementById("filter-free");
-    const filterTaken    = document.getElementById("filter-taken");
-    const filterReserved = document.getElementById("filter-reserved");
-    const availableCountSpan = document.getElementById("available-count");
-
-    const openAdminBtn  = document.getElementById("open-admin");
-    const adminPopup    = document.getElementById("admin-popup");
-    const adminPassInput= document.getElementById("admin-pass");
-    const adminShowPass = document.getElementById("show-pass");
-    const adminValidate = document.getElementById("admin-validate");
-    const adminPanel    = document.getElementById("admin-panel");
-
-    function applyAdminModeVisual(isAdmin) {
-      if (!adminPanel) return;
-      adminPanel.style.display = isAdmin ? "block" : "none";
-      if (isAdmin) {
-        if (!document.getElementById("admin-badge")) {
-          const badge = document.createElement("div");
-          badge.id = "admin-badge";
-          badge.className = "badge-admin";
-          badge.innerHTML = "Mode admin actif";
-          document.body.appendChild(badge);
+    async function fetchOwnersFromServer() {
+      if (!SHEET_API_URL) return;
+      try {
+        const resp = await fetch(SHEET_API_URL);
+        if (!resp.ok) throw new Error("HTTP " + resp.status);
+        const data = await resp.json();
+        if (data && data.owners) {
+          owners = data.owners;
+          saveJSON(OWNERS_KEY, owners);
+          updatePlotColors();
+          applyVisibilityFilters();
+          updateAvailableCount();
         }
-      } else {
-        const badge = document.getElementById("admin-badge");
-        if (badge) badge.remove();
+      } catch (err) {
+        console.warn("Impossible de charger les données distantes, utilisation du cache local.", err);
       }
     }
 
-    (function initAdminMode() {
-      const flag = localStorage.getItem(ADMIN_FLAG);
-      const isAdmin = (flag === "true");
-      applyAdminModeVisual(isAdmin);
-    })();
-
-    openAdminBtn.addEventListener("click", () => {
-      adminPopup.style.display = "block";
-      adminPassInput.value = "";
-      adminPassInput.focus();
-    });
-
-    adminShowPass.addEventListener("change", () => {
-      adminPassInput.type = adminShowPass.checked ? "text" : "password";
-    });
-
-    adminValidate.addEventListener("click", async () => {
-      const passValue = adminPassInput.value || "";
+    async function syncOwnersToServer() {
+      if (!SHEET_API_URL) return;
       try {
-        const hash = await sha256(passValue);
-        if (hash === ADMIN_HASH) {
-          localStorage.setItem(ADMIN_FLAG, "true");
-          applyAdminModeVisual(true);
-          adminPopup.style.display = "none";
-          alert("Accès administrateur accordé.");
-        } else {
-          alert("Mot de passe incorrect.");
-        }
+        await fetch(SHEET_API_URL, {
+          method: "POST",
+          mode: "no-cors",
+          body: JSON.stringify({ action: "saveAll", owners })
+        });
       } catch (err) {
-        console.error(err);
-        alert("Erreur lors du calcul du hash SHA-256.");
+        console.error("Erreur de synchronisation avec la feuille Google.", err);
+        alert(
+          "Attention : la synchronisation avec la feuille Google a échoué.\n" +
+          "Les données sont quand même sauvegardées localement sur cet appareil."
+        );
       }
+    }
+
+    const tooltip = document.getElementById("tooltip");
+    const tooltipTitle = tooltip.querySelector(".tooltip-title");
+    const tooltipBody = tooltip.querySelector(".tooltip-body");
+
+    function getJobLabel(code, gender) {
+      if (!code) return "";
+      switch (code) {
+        case "alchimie":       return "Alchimie";
+        case "calligraphie":   return "Calligraphie";
+        case "couture":        return "Couture";
+        case "cuisine":        return "Cuisine";
+        case "enchantement":   return "Enchantement";
+        case "forge":          return "Forge";
+        case "ingenierie":     return "Ingénierie";
+        case "joaillerie":     return "Joaillerie";
+        case "travail_du_cuir":return "Travail du cuir";
+        case "peche":          return "Pêche";
+        case "mine":           return "Minage";
+        case "herboristerie":  return "Herboristerie";
+        case "depecage":       return "Dépeçage";
+        case "archeologie":    return "Archéologie";   // ← nouveau métier
+        default:               return code;
+      }
+    }
+
+    const JOB_ICONS = {
+      "alchimie":       "icone_alchimie.png",
+      "calligraphie":   "icone_calligraphie.png",
+      "couture":        "icone_couture.png",
+      "cuisine":        "icone_cuisine.png",
+      "enchantement":   "icone_enchantement.png",
+      "forge":          "icone_forge.png",
+      "ingenierie":     "icone_ingenierie.png",
+      "joaillerie":     "icone_joaillerie.png",
+      "travail_du_cuir":"icone_travail_du_cuir.png",
+      "peche":          "icone_peche.png",
+      "mine":           "icone_mine.png",
+      "herboristerie":  "icone_herboristerie.png",
+      "depecage":       "icone_depecage.png",
+      "archeologie":    "icone_archeologie.png"       // ← icône Archéologie
+    };
+
+    const JOB_SYNONYMS = {
+      "forgeron":     "forge",
+      "forgeronne":   "forge",
+      "mineur":       "mine",
+      "mineuse":      "mine",
+      "pêcheur":      "peche",
+      "pecheur":      "peche",
+      "pêcheuse":     "peche",
+      "pecheuse":     "peche",
+      "herboriste":   "herboristerie",
+      "herbo":        "herboristerie",
+      "dépeceur":     "depecage",
+      "depeceur":     "depecage",
+      "dépeceuse":    "depecage",
+      "depeceuse":    "depecage",
+      "archéologie":  "archeologie",   // quelques synonymes bonus
+      "archeologie":  "archeologie",
+      "archéologue":  "archeologie",
+      "archeologue":  "archeologie"
+    };
+
+    function updatePlotColors() {
+      document.querySelectorAll(".plot").forEach(plot => {
+        const id = parseInt(plot.textContent, 10);
+        plot.classList.toggle("taken", !!owners[id]);
+      });
+    }
+
+    function showOwnerTooltipById(id, rect) {
+      const o = owners[id];
+      if (!o) {
+        tooltip.style.display = "none";
+        return;
+      }
+      const g = o.gender || "";
+      let t = "Résident·e";
+      if (g === "f") t = "Résidente";
+      if (g === "m") t = "Résident";
+
+      tooltipTitle.textContent = o.name;
+      const lines = [];
+      lines.push(`${t} depuis le ${o.since}`);
+
+      if (o.jobs && o.jobs.length > 0) {
+        const labels = o.jobs.map(j => getJobLabel(j, g)).filter(Boolean);
+        if (labels.length > 0) {
+          lines.push("Métiers : " + labels.join(", "));
+        }
+      }
+      lines.push(`Parcelle : #${id}`);
+
+      tooltipBody.innerHTML = lines.join("<br>");
+
+      tooltip.style.top  = (rect.top + window.scrollY - 10) + "px";
+      tooltip.style.left = (rect.left + window.scrollX + rect.width / 2) + "px";
+      tooltip.style.transform = "translate(-50%, -100%)";
+      tooltip.style.display = "block";
+    }
+
+    document.querySelectorAll(".plot").forEach(plot => {
+      const id = parseInt(plot.textContent, 10);
+
+      plot.addEventListener("mouseenter", () => {
+        const o = owners[id];
+        if (!o) {
+          tooltip.style.display = "none";
+          return;
+        }
+        const r = plot.getBoundingClientRect();
+        showOwnerTooltipById(id, r);
+      });
+
+      plot.addEventListener("mouseleave", () => {
+        tooltip.style.display = "none";
+      });
+    });
+
+    document.querySelectorAll(".marker").forEach(marker => {
+      marker.addEventListener("mouseenter", () => {
+        const title = marker.getAttribute("data-title");
+        const text  = marker.getAttribute("data-text");
+        tooltipTitle.textContent = title || "";
+        tooltipBody.textContent = text || "";
+        const r = marker.getBoundingClientRect();
+        tooltip.style.top  = (r.top + window.scrollY - 10) + "px";
+        tooltip.style.left = (r.left + window.scrollX + r.width / 2) + "px";
+        tooltip.style.transform = "translate(-50%, -100%)";
+        tooltip.style.display = "block";
+      });
+      marker.addEventListener("mouseleave", () => {
+        tooltip.style.display = "none";
+      });
+    });
+
+    const chkFree   = document.getElementById("toggle-free");
+    const chkTaken  = document.getElementById("toggle-taken");
+    const chkFlight = document.getElementById("toggle-flight");
+    const chkPortal = document.getElementById("toggle-portal");
+
+    function applyVisibilityFilters() {
+      const showFree   = chkFree.checked;
+      const showTaken  = chkTaken.checked;
+      const showFlight = chkFlight.checked;
+      const showPortal = chkPortal.checked;
+
+      document.querySelectorAll(".plot").forEach(plot => {
+        const isTaken = plot.classList.contains("taken");
+        let visible = true;
+        if (isTaken && !showTaken) visible = false;
+        if (!isTaken && !showFree) visible = false;
+        plot.style.display = visible ? "flex" : "none";
+      });
+
+      document.querySelectorAll(".marker-flight").forEach(m => {
+        m.style.display = showFlight ? "block" : "none";
+      });
+
+      document.querySelectorAll(".marker-portal").forEach(m => {
+        m.style.display = showPortal ? "block" : "none";
+      });
+    }
+
+    chkFree.addEventListener("change", applyVisibilityFilters);
+    chkTaken.addEventListener("change", applyVisibilityFilters);
+    chkFlight.addEventListener("change", applyVisibilityFilters);
+    chkPortal.addEventListener("change", applyVisibilityFilters);
+
+    function updateAvailableCount() {
+      const totalPlots = document.querySelectorAll(".plot").length;
+      let taken = Object.keys(owners).length;
+      const free = totalPlots - taken;
+      document.getElementById("available-count").textContent = free;
+    }
+
+    const availableWrapper = document.getElementById("available-wrapper");
+    availableWrapper.addEventListener("mouseenter", () => {
+      const totalPlots = document.querySelectorAll(".plot").length;
+      const freeIds = [];
+      for (let i = 0; i < totalPlots; i++) {
+        if (!owners[i]) freeIds.push(i);
+      }
+      tooltipTitle.textContent = "Emplacements libres";
+      tooltipBody.textContent = freeIds.length ? freeIds.join(", ") : "Aucun";
+      const r = availableWrapper.getBoundingClientRect();
+      tooltip.style.top  = (r.top + window.scrollY - 10) + "px";
+      tooltip.style.left = (r.left + window.scrollX + r.width / 2) + "px";
+      tooltip.style.transform = "translate(-50%, -100%)";
+      tooltip.style.display = "block";
+    });
+    availableWrapper.addEventListener("mouseleave", () => {
+      tooltip.style.display = "none";
+    });
+
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>"']/g, function(ch) {
+        return ({
+          '&':'&amp;',
+          '<':'&lt;',
+          '>':'&gt;',
+          '"':'&quot;',
+          '\'':'&#039;'
+        }[ch]);
+      });
+    }
+
+    const recBtn = document.getElementById("open-recensement");
+    const recPopup = document.getElementById("recensement-popup");
+    const recClose = document.getElementById("recensement-close");
+    const recSortSelect = document.getElementById("rec-sort");
+    const recSearchInput = document.getElementById("rec-search");
+    const recFilterJobSelect = document.getElementById("rec-filter-job");
+    const tabResidents = document.getElementById("tab-residents");
+    const tabArtisans  = document.getElementById("tab-artisans");
+    const recResidentsContent = document.getElementById("rec-residents-content");
+    const recArtisansContent  = document.getElementById("rec-artisans-content");
+
+    ["wheel", "mousedown"].forEach(evt => {
+      recPopup.addEventListener(evt, (e) => {
+        e.stopPropagation();
+      }, { passive: true });
+    });
+
+    let currentRecTab = "residents";
+
+    function setRecTab(tab) {
+      currentRecTab = tab;
+      if (tab === "residents") {
+        tabResidents.classList.add("active");
+        tabArtisans.classList.remove("active");
+        recResidentsContent.style.display = "block";
+        recArtisansContent.style.display  = "none";
+      } else {
+        tabResidents.classList.remove("active");
+        tabArtisans.classList.add("active");
+        recResidentsContent.style.display = "none";
+        recArtisansContent.style.display  = "block";
+      }
+    }
+
+    tabResidents.addEventListener("click", () => {
+      setRecTab("residents");
+    });
+    tabArtisans.addEventListener("click", () => {
+      setRecTab("artisans");
+    });
+
+    function updateRecensement() {
+      const listDiv = document.getElementById("rec-list");
+      const artisansDiv = document.getElementById("rec-artisans-list");
+      const totalSpan = document.getElementById("rec-total");
+      const avgSpan = document.getElementById("rec-average");
+
+      const entries = [];
+      const now = Date.now();
+      let sumDays = 0;
+      let countDays = 0;
+
+      for (const id in owners) {
+        const o = owners[id];
+        const numericId = parseInt(id, 10);
+        entries.push({
+          id: numericId,
+          name: o.name,
+          gender: o.gender || "",
+          since: o.since,
+          jobs: o.jobs || [],
+          timestamp: o.timestamp || null,
+          note: o.note || ""
+        });
+      }
+
+      totalSpan.textContent = entries.length;
+
+      entries.forEach(e => {
+        if (typeof e.timestamp === "number" && !isNaN(e.timestamp)) {
+          const diff = now - e.timestamp;
+          const days = diff / (1000 * 60 * 60 * 24);
+          if (days >= 0) {
+            sumDays += days;
+            countDays++;
+          }
+        }
+      });
+
+      if (countDays === 0) {
+        avgSpan.textContent = "—";
+      } else {
+        const avg = Math.round(sumDays / countDays);
+        avgSpan.textContent = avg + " jours";
+      }
+
+      const query = recSearchInput ? recSearchInput.value.trim().toLowerCase() : "";
+      const filterJob = recFilterJobSelect ? recFilterJobSelect.value : "";
+      const adminMode = localStorage.getItem(ADMIN_FLAG) === "true";
+
+      function matchesSearch(entry) {
+        if (!query) return true;
+
+        const q = query;
+        const name = (entry.name || "").toLowerCase();
+        if (name.includes(q)) return true;
+
+        if (String(entry.id).includes(q)) return true;
+
+        let jobLabelMatch = false;
+        (entry.jobs || []).forEach(j => {
+          const label = getJobLabel(j, entry.gender).toLowerCase();
+          if (label.includes(q)) jobLabelMatch = true;
+        });
+        if (jobLabelMatch) return true;
+
+        for (const word in JOB_SYNONYMS) {
+          if (q.includes(word)) {
+            const jobCode = JOB_SYNONYMS[word];
+            if ((entry.jobs || []).includes(jobCode)) return true;
+          }
+        }
+
+        return false;
+      }
+
+      let residentsEntries = entries.slice();
+      const sortMode = recSortSelect ? recSortSelect.value : "id";
+
+      if (sortMode === "name") {
+        residentsEntries.sort((a, b) =>
+          (a.name || "").localeCompare(b.name || "", "fr", { sensitivity: "base" })
+        );
+      } else if (sortMode === "anciennete") {
+        residentsEntries.sort((a, b) => {
+          const ta = (typeof a.timestamp === "number") ? a.timestamp : Infinity;
+          const tb = (typeof b.timestamp === "number") ? b.timestamp : Infinity;
+          return ta - tb;
+        });
+      } else {
+        residentsEntries.sort((a, b) => a.id - b.id);
+      }
+
+      listDiv.innerHTML = "";
+      residentsEntries.forEach(e => {
+        if (!matchesSearch(e)) return;
+
+        if (filterJob === "none") {
+          if (e.jobs && e.jobs.length) return;
+        } else if (filterJob) {
+          if (!(e.jobs || []).includes(filterJob)) return;
+        }
+
+        const div = document.createElement("div");
+        div.className = "recensement-list-entry";
+        const g = e.gender === "f" ? "Résidente" :
+                  e.gender === "m" ? "Résident" : "Résident·e";
+        const jobLabels = (e.jobs || [])
+          .map(code => getJobLabel(code, e.gender))
+          .filter(Boolean);
+
+        let html =
+          `<span class="gold">#${e.id}</span> — <b>${escapeHtml(e.name)}</b>` +
+          `<br>${g} depuis le ${escapeHtml(e.since)}`;
+        if (jobLabels.length > 0) {
+          html += `<br>Métiers : ${jobLabels.map(escapeHtml).join(", ")}`;
+        }
+        if (adminMode && e.note) {
+          html += `<br><span class="rec-note">Note interne : ${escapeHtml(e.note)}</span>`;
+        }
+
+        div.innerHTML = html;
+        listDiv.appendChild(div);
+      });
+
+      artisansDiv.innerHTML = "";
+
+      const jobsMap = {};
+      residentsEntries.forEach(e => {
+        (e.jobs || []).forEach(j => {
+          if (!jobsMap[j]) {
+            jobsMap[j] = [];
+          }
+          jobsMap[j].push(e);
+        });
+      });
+
+      const jobCodes = Object.keys(jobsMap).sort((a, b) => {
+        const la = getJobLabel(a, "");
+        const lb = getJobLabel(b, "");
+        return la.localeCompare(lb, "fr", { sensitivity: "base" });
+      });
+
+      jobCodes.forEach(code => {
+        const label = getJobLabel(code, "");
+        if (!label) return;
+        const list = jobsMap[code];
+
+        const filtered = list.filter(e => matchesSearch(e));
+        if (filtered.length === 0) return;
+
+        const section = document.createElement("div");
+        section.className = "artisan-job-section";
+
+        const header = document.createElement("div");
+        header.className = "artisan-job-header";
+
+        const icon = document.createElement("img");
+        icon.className = "artisan-job-icon";
+        icon.src = JOB_ICONS[code] || "";
+        icon.alt = label;
+
+        const titleSpan = document.createElement("span");
+        titleSpan.className = "artisan-job-title";
+        titleSpan.textContent = label;
+
+        header.appendChild(icon);
+        header.appendChild(titleSpan);
+
+        const namesDiv = document.createElement("div");
+        namesDiv.className = "artisan-job-names";
+
+        filtered.forEach((e, idx) => {
+          const span = document.createElement("span");
+          span.className = "artisan-name";
+          span.textContent = e.name;
+          span.dataset.id = e.id;
+
+          span.addEventListener("mouseenter", () => {
+            const rect = span.getBoundingClientRect();
+            showOwnerTooltipById(e.id, rect);
+          });
+          span.addEventListener("mouseleave", () => {
+            tooltip.style.display = "none";
+          });
+
+          span.addEventListener("click", () => {
+            recPopup.style.display = "none";
+            tooltip.style.display = "none";
+            focusOnPlot(e.id);
+          });
+
+          namesDiv.appendChild(span);
+          if (idx < filtered.length - 1) {
+            namesDiv.appendChild(document.createTextNode(", "));
+          }
+        });
+
+        section.appendChild(header);
+        section.appendChild(namesDiv);
+        artisansDiv.appendChild(section);
+      });
+    }
+
+    if (recSortSelect) {
+      recSortSelect.addEventListener("change", () => {
+        updateRecensement();
+      });
+    }
+
+    if (recSearchInput) {
+      recSearchInput.addEventListener("input", () => {
+        updateRecensement();
+      });
+    }
+
+    if (recFilterJobSelect) {
+      recFilterJobSelect.addEventListener("change", () => {
+        updateRecensement();
+      });
+    }
+
+    recBtn.addEventListener("click", () => {
+      setRecTab("residents");
+      updateRecensement();
+      recPopup.style.display = "block";
+    });
+
+    recClose.addEventListener("click", () => {
+      recPopup.style.display = "none";
+      tooltip.style.display = "none";
     });
 
     const panel        = document.getElementById("admin-panel");
@@ -976,253 +1317,201 @@ const JOB_ICONS = {
     const job4         = document.getElementById("job4");
     const job5         = document.getElementById("job5");
     const noteInput    = document.getElementById("owner-note");
-    const rpShortInput = document.getElementById("owner-rp-short");
-    const rpLongInput  = document.getElementById("owner-rp-long");
     const deleteBtn    = document.getElementById("delete-owner");
     const generateDeedBtn = document.getElementById("generate-deed");
-    const backupSaveBtn   = document.getElementById("backup-save");
-    const backupLoadBtn   = document.getElementById("backup-load");
-    const adminLogoutBtn  = document.getElementById("admin-logout");
+    const backupSaveBtn = document.getElementById("backup-save");
+    const backupLoadBtn = document.getElementById("backup-load");
+    const backupFileInput = document.getElementById("backup-file");
 
-    const deedPreviewContainer = null;
+    (function initPlotSelect() {
+      const defaultOption = document.createElement("option");
+      defaultOption.value = "";
+      defaultOption.textContent = "-- Choisir un emplacement --";
+      defaultOption.disabled = true;
+      defaultOption.selected = true;
+      selectPlot.appendChild(defaultOption);
+      for (let i = 0; i <= 54; i++) {
+        const opt = document.createElement("option");
+        opt.value = i;
+        opt.textContent = i;
+        selectPlot.appendChild(opt);
+      }
+    })();
 
-    for (let d = 1; d <= 31; d++) {
-      const opt = document.createElement("option");
-      opt.value = d;
-      opt.textContent = d.toString().padStart(2, "0");
-      daySelect.appendChild(opt);
-    }
+    (function initDateSelects() {
+      const optD = document.createElement("option");
+      optD.value = "";
+      optD.textContent = "Jour";
+      optD.disabled = true;
+      optD.selected = true;
+      daySelect.appendChild(optD);
+      for (let d = 1; d <= 31; d++) {
+        const o = document.createElement("option");
+        o.value = d;
+        o.textContent = d;
+        daySelect.appendChild(o);
+      }
 
-    const MONTHS_LABELS = [
-      "janvier","février","mars","avril","mai","juin",
-      "juillet","août","septembre","octobre","novembre","décembre"
+      const months = [
+        "janvier","février","mars","avril","mai","juin",
+        "juillet","août","septembre","octobre","novembre","décembre"
+      ];
+      const optM = document.createElement("option");
+      optM.value = "";
+      optM.textContent = "Mois";
+      optM.disabled = true;
+      optM.selected = true;
+      monthSelect.appendChild(optM);
+      months.forEach((m, idx) => {
+        const o = document.createElement("option");
+        o.value = idx;
+        o.textContent = m;
+        monthSelect.appendChild(o);
+      });
+
+      const optY = document.createElement("option");
+      optY.value = "";
+      optY.textContent = "Année";
+      optY.disabled = true;
+      optY.selected = true;
+      yearSelect.appendChild(optY);
+      for (let y = 2024; y <= 2035; y++) {
+        const o = document.createElement("option");
+        o.value = y;
+        o.textContent = y;
+        yearSelect.appendChild(o);
+      }
+    })();
+
+    const JOB_OPTIONS = [
+      { value: "",             label: "(Rien)" },
+      { value: "alchimie",     label: "Alchimie" },
+      { value: "calligraphie", label: "Calligraphie" },
+      { value: "couture",      label: "Couture" },
+      { value: "cuisine",      label: "Cuisine" },
+      { value: "enchantement", label: "Enchantement" },
+      { value: "forge",        label: "Forge" },
+      { value: "ingenierie",   label: "Ingénierie" },
+      { value: "joaillerie",   label: "Joaillerie" },
+      { value: "travail_du_cuir", label: "Travail du cuir" },
+      { value: "peche",        label: "Pêche" },
+      { value: "mine",         label: "Minage" },
+      { value: "herboristerie",label: "Herboristerie" },
+      { value: "depecage",     label: "Dépeçage" },
+      { value: "archeologie",  label: "Archéologie" } // ← nouveau dans la liste
     ];
 
-    MONTHS_LABELS.forEach((m, index) => {
-      const opt = document.createElement("option");
-      opt.value = index;
-      opt.textContent = m;
-      monthSelect.appendChild(opt);
-    });
-
-    const currentYear = new Date().getFullYear();
-    for (let y = currentYear; y >= 2004; y--) {
-      const opt = document.createElement("option");
-      opt.value = y;
-      opt.textContent = y;
-      yearSelect.appendChild(opt);
-    }
-
-    function fillJobsDropdown(selectEl) {
-      JOBS.forEach(job => {
-        const opt = document.createElement("option");
-        opt.value = job.value;
-        opt.textContent = job.label;
-        selectEl.appendChild(opt);
+    function fillJobSelect(sel) {
+      JOB_OPTIONS.forEach(j => {
+        const o = document.createElement("option");
+        o.value = j.value;
+        o.textContent = j.label;
+        sel.appendChild(o);
       });
     }
 
-    [job1, job2, job3, job4, job5].forEach(sel => fillJobsDropdown(sel));
+    fillJobSelect(job1);
+    fillJobSelect(job2);
+    fillJobSelect(job3);
+    fillJobSelect(job4);
+    fillJobSelect(job5);
 
-    function refreshJobDropdowns() {
-      const selects = [job1, job2, job3, job4, job5];
-      const chosen = selects.map(s => s.value).filter(v => v);
+    (function initRecFilterJobs() {
+      if (!recFilterJobSelect) return;
+      recFilterJobSelect.innerHTML = "";
+      const optAll = document.createElement("option");
+      optAll.value = "";
+      optAll.textContent = "(Tous les métiers)";
+      recFilterJobSelect.appendChild(optAll);
 
-      selects.forEach(sel => {
-        const current = sel.value;
-        Array.from(sel.options).forEach(opt => {
-          const val = opt.value;
-          if (val === "") {
-            opt.disabled = false;
-            return;
-          }
-          if (chosen.includes(val) && val !== current) {
-            opt.disabled = true;
-          } else {
-            opt.disabled = false;
-          }
-        });
+      const optNone = document.createElement("option");
+      optNone.value = "none";
+      optNone.textContent = "Sans métier";
+      recFilterJobSelect.appendChild(optNone);
+
+      JOB_OPTIONS.forEach(j => {
+        if (!j.value) return;
+        const o = document.createElement("option");
+        o.value = j.value;
+        o.textContent = j.label;
+        recFilterJobSelect.appendChild(o);
       });
-    }
+    })();
 
-    [job1, job2, job3, job4, job5].forEach(sel => {
-      sel.addEventListener("change", () => {
-        refreshJobDropdowns();
-      });
-    });
+function refreshJobDropdowns() {
+  const selects = [job1, job2, job3, job4, job5];
 
-    function updatePlotColors() {
-      document.querySelectorAll(".plot").forEach(plot => {
-        const id = plot.getAttribute("data-id");
-        if (owners[id]) {
-          plot.classList.add("taken");
-          plot.classList.remove("available");
-        } else {
-          plot.classList.add("available");
-          plot.classList.remove("taken");
-        }
-      });
-    }
+  // valeurs actuellement choisies (non vides)
+  const chosen = selects
+    .map(s => s.value)
+    .filter(v => v !== "");
 
-    function applyVisibilityFilters() {
-      const showFree = filterFree.checked;
-      const showTaken = filterTaken.checked;
-      const showReserved = filterReserved.checked;
+  selects.forEach(sel => {
+    const current = sel.value;
 
-      document.querySelectorAll(".plot").forEach(plot => {
-        const id = plot.getAttribute("data-id");
-        const isTaken = !!owners[id];
-        const isReserved = plot.classList.contains("reserved");
+    Array.from(sel.options).forEach(opt => {
+      const val = opt.value;
 
-        let visible = false;
-        if (!isTaken && !isReserved && showFree) visible = true;
-        if (isTaken && showTaken) visible = true;
-        if (isReserved && showReserved) visible = true;
-
-        plot.style.display = visible ? "block" : "none";
-      });
-    }
-
-    function updateAvailableCount() {
-      let total = 0;
-      let takenCount = 0;
-      const allPlots = document.querySelectorAll(".plot");
-
-      allPlots.forEach(plot => {
-        const id = plot.getAttribute("data-id");
-        total++;
-        if (owners[id]) takenCount++;
-      });
-
-      const free = total - takenCount;
-      availableCountSpan.textContent = free.toString();
-    }
-
-    [filterFree, filterTaken, filterReserved].forEach(chk => {
-      chk.addEventListener("change", () => {
-        applyVisibilityFilters();
-      });
-    });
-
-    function showOwnerTooltipById(id, rect) {
-      const o = owners[id];
-      if (!o) {
-        tooltip.style.display = "none";
+      // "(Rien)" jamais désactivé
+      if (val === "") {
+        opt.disabled = false;
         return;
       }
-      const g = o.gender || "";
-      let t = "Résident·e";
-      if (g === "f") t = "Résidente";
-      if (g === "m") t = "Résident";
 
-      tooltipTitle.textContent = o.name || "Inconnu";
-      const lines = [];
-
-      if (o.since) {
-        lines.push(`${t} depuis le ${o.since}`);
+      // si ce métier est choisi ailleurs, on le grise
+      if (chosen.includes(val) && val !== current) {
+        opt.disabled = true;
+      } else {
+        opt.disabled = false;
       }
-
-      if (o.jobs && o.jobs.length > 0) {
-        const labels = o.jobs.map(j => getJobLabel(j, g)).filter(Boolean);
-        if (labels.length > 0) {
-          lines.push("Métiers : " + labels.join(", "));
-        }
-      }
-
-      if (o.rpShort) {
-        lines.push("Côté RP : " + o.rpShort);
-      }
-
-      lines.push(`Parcelle : #${id}`);
-
-      tooltipBody.innerHTML = lines.join("<br>");
-
-      tooltip.style.top  = (rect.top + window.scrollY - 10) + "px";
-      tooltip.style.left = (rect.left + window.scrollX + rect.width / 2) + "px";
-      tooltip.style.transform = "translate(-50%, -100%)";
-      tooltip.style.display = "block";
-    }
-
-    mapInner.addEventListener("mouseleave", () => {
-      tooltip.style.display = "none";
     });
+  });
+}
 
-    function focusOnPlot(id) {
-      const plot = document.querySelector(`.plot[data-id="${id}"]`);
-      if (!plot) return;
-      const rect = plot.getBoundingClientRect();
-      showOwnerTooltipById(id, rect);
-      window.scrollTo({
-        top: rect.top + window.scrollY - 200,
-        behavior: "smooth"
-      });
-    }
+[job1, job2, job3, job4, job5].forEach(sel => {
+  sel.addEventListener("change", refreshJobDropdowns);
+});
 
-    function populatePlotsSelect() {
-      const plots = Array.from(document.querySelectorAll(".plot"));
-      const sorted = plots
-        .map(p => parseInt(p.getAttribute("data-id"), 10))
-        .sort((a, b) => a - b);
-      selectPlot.innerHTML = "";
-      sorted.forEach(id => {
-        const opt = document.createElement("option");
-        opt.value = id;
-        opt.textContent = "#" + id;
-        selectPlot.appendChild(opt);
-      });
-    }
+// état initial propre
+refreshJobDropdowns();
 
     function refreshForm(id) {
       const o = owners[id];
       if (!o) {
-        inputName.value    = "";
-        selectGender.value = "";
-        daySelect.value    = "";
-        monthSelect.value  = "";
-        yearSelect.value   = "";
-        job1.value = "";
-        job2.value = "";
-        job3.value = "";
-        job4.value = "";
-        job5.value = "";
-        noteInput.value    = "";
-        rpShortInput.value = "";
-        rpLongInput.value  = "";
-        refreshJobDropdowns();
-        return;
-      }
+  inputName.value = "";
+  selectGender.value = "";
+  daySelect.value = "";
+  monthSelect.value = "";
+  yearSelect.value = "";
+  job1.value = "";
+  job2.value = "";
+  job3.value = "";
+  job4.value = "";
+  job5.value = "";
+  noteInput.value = "";
+  refreshJobDropdowns();
+  return;
 
-      inputName.value    = o.name || "";
+      }
+      inputName.value = o.name || "";
       selectGender.value = o.gender || "";
+      if (typeof o.day === "number") daySelect.value = o.day;
+      else daySelect.value = "";
+      if (typeof o.month === "number") monthSelect.value = o.month;
+      else monthSelect.value = "";
+      if (typeof o.year === "number") yearSelect.value = o.year;
+      else yearSelect.value = "";
 
-      if (typeof o.day === "number") {
-        daySelect.value = o.day;
-      } else {
-        daySelect.value = "";
-      }
-      if (typeof o.month === "number") {
-        monthSelect.value = o.month;
-      } else {
-        monthSelect.value = "";
-      }
-      if (typeof o.year === "number") {
-        yearSelect.value = o.year;
-      } else {
-        yearSelect.value = "";
-      }
+const jobs = o.jobs || [];
+job1.value = jobs[0] || "";
+job2.value = jobs[1] || "";
+job3.value = jobs[2] || "";
+job4.value = jobs[3] || "";
+job5.value = jobs[4] || "";
 
-      const jobs = o.jobs || [];
-      job1.value = jobs[0] || "";
-      job2.value = jobs[1] || "";
-      job3.value = jobs[2] || "";
-      job4.value = jobs[3] || "";
-      job5.value = jobs[4] || "";
+noteInput.value = o.note || "";
+refreshJobDropdowns();
 
-      noteInput.value    = o.note    || "";
-      rpShortInput.value = o.rpShort || "";
-      rpLongInput.value  = o.rpLong  || "";
-
-      refreshJobDropdowns();
     }
 
     selectPlot.addEventListener("change", () => {
@@ -1261,17 +1550,15 @@ const JOB_ICONS = {
       const since = day + " " + monthLabel + " " + year;
       const timestamp = new Date(year, monthIndex, day).getTime();
 
-      const jobs = [];
-      [job1, job2, job3, job4, job5].forEach(sel => {
-        const val = sel.value;
-        if (val && !jobs.includes(val)) {
-          jobs.push(val);
-        }
-      });
+const jobs = [];
+[job1, job2, job3, job4, job5].forEach(sel => {
+  const val = sel.value;
+  if (val && !jobs.includes(val)) {
+    jobs.push(val); // sécurité anti-doublon dans les données
+  }
+});
 
-      const note    = noteInput.value.trim();
-      const rpShort = rpShortInput.value.trim();
-      const rpLong  = rpLongInput.value.trim();
+      const note = noteInput.value.trim();
 
       owners[id] = {
         name,
@@ -1282,9 +1569,7 @@ const JOB_ICONS = {
         month: monthIndex,
         year,
         jobs,
-        note,
-        rpShort,
-        rpLong
+        note
       };
 
       saveJSON(OWNERS_KEY, owners);
@@ -1316,459 +1601,369 @@ const JOB_ICONS = {
       alert("Résident supprimé.");
     });
 
-    adminLogoutBtn.addEventListener("click", () => {
-      if (!confirm("Se déconnecter du mode administrateur ?")) return;
-      localStorage.setItem(ADMIN_FLAG, "false");
-      applyAdminModeVisual(false);
-      alert("Mode administrateur désactivé.");
+    generateDeedBtn.addEventListener("click", () => {
+      const id = parseInt(selectPlot.value, 10);
+      if (isNaN(id)) {
+        alert("Merci de choisir un emplacement avant de générer l'acte.");
+        return;
+      }
+
+      const o = owners[id];
+      if (!o) {
+        alert("Aucun résident enregistré sur cet emplacement.");
+        return;
+      }
+
+      const ownerName = o.name;
+      const plotNumber = "#" + id;
+
+      let dateStr;
+      if (typeof o.day === "number" && typeof o.month === "number" && typeof o.year === "number") {
+        const months = [
+          "janvier","février","mars","avril","mai","juin",
+          "juillet","août","septembre","octobre","novembre","décembre"
+        ];
+        const monthLabel = months[o.month] || "";
+        dateStr = o.day + " " + monthLabel + " " + o.year;
+      } else {
+        const now = new Date();
+        dateStr = now.toLocaleDateString("fr-FR", {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        });
+      }
+
+      const IMG_W = 6144;
+      const IMG_H = 4096;
+
+      const NAME_X_PCT = (3617 / IMG_W) * 100;
+      const NAME_Y_PCT = (1570 / IMG_H) * 100;
+
+      const PLOT_X_PCT = (5395 / IMG_W) * 100;
+      const PLOT_Y_PCT = (1766 / IMG_H) * 100;
+
+      const DATE_X_PCT = (3144 / IMG_W) * 100;
+      const DATE_Y_PCT = (3388 / IMG_H) * 100;
+
+      const w = window.open("");
+      if (!w) {
+        alert("Impossible d'ouvrir la fenêtre de prévisualisation (popup bloqué ?).");
+        return;
+      }
+
+      w.document.write(`
+        <!DOCTYPE html>
+        <html lang="fr">
+        <head>
+          <meta charset="UTF-8" />
+          <title>Acte de propriété - Enclave du Vent d'Or</title>
+          <style>
+            @page { margin: 0; }
+            html, body {
+              margin: 0;
+              padding: 0;
+              background: #000;
+              height: 100%;
+            }
+            body {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+            }
+            .wrapper {
+              position: relative;
+              width: 1024px;
+              height: ${1024 * (IMG_H / IMG_W)}px;
+            }
+            .bg-img {
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              object-fit: fill;
+              z-index: 0;
+            }
+            .txt {
+              position: absolute;
+              z-index: 1;
+              font-family: "Caladea", "Times New Roman", serif;
+              color: #000000;
+              font-size: 24px;
+              white-space: nowrap;
+            }
+            .name {
+              left: ${NAME_X_PCT}%;
+              top: ${NAME_Y_PCT}%;
+              transform: translate(0, -50%);
+            }
+            .plot {
+              left: ${PLOT_X_PCT}%;
+              top: ${PLOT_Y_PCT}%;
+              transform: translate(0, -50%);
+            }
+            .date {
+              left: ${DATE_X_PCT}%;
+              top: ${DATE_Y_PCT}%;
+              transform: translate(0, -50%);
+            }
+          </style>
+        </head>
+        <body>
+          <div class="wrapper">
+            <img id="bg-acte" class="bg-img" src="${DEED_BASE_SRC}" alt="Acte de propriété">
+            <div class="txt name">${ownerName}</div>
+            <div class="txt plot">${plotNumber}</div>
+            <div class="txt date">${dateStr}</div>
+          </div>
+          <script>
+            (function() {
+              const img = document.getElementById('bg-acte');
+              function doPrint() {
+                window.focus();
+                window.print();
+              }
+              if (img.complete) {
+                doPrint();
+              } else {
+                img.onload = doPrint;
+              }
+            })();
+          <\/script>
+        </body>
+        </html>
+      `);
+
+      w.document.close();
     });
 
     backupSaveBtn.addEventListener("click", () => {
-      const dataStr = JSON.stringify(owners, null, 2);
-      const blob = new Blob([dataStr], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      const dateStr = new Date().toISOString().replace(/[:.]/g, "-");
-      a.href = url;
-      a.download = "logis_enclave_backup_" + dateStr + ".json";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+      try {
+        const dataStr = JSON.stringify(owners, null, 2);
+        const blob = new Blob([dataStr], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+
+        const now = new Date();
+        const pad = n => String(n).padStart(2, "0");
+        const fileName =
+          "enclave_logis_backup_" +
+          now.getFullYear() + "-" +
+          pad(now.getMonth() + 1) + "-" +
+          pad(now.getDate()) + "_" +
+          pad(now.getHours()) + "h" +
+          pad(now.getMinutes()) +
+          ".json";
+
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        alert("Sauvegarde téléchargée sur votre ordinateur.");
+      } catch (e) {
+        alert("Erreur lors de la création de la sauvegarde.");
+      }
     });
 
     backupLoadBtn.addEventListener("click", () => {
-      const input = document.createElement("input");
-      input.type = "file";
-      input.accept = "application/json";
-      input.addEventListener("change", () => {
-        const file = input.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = e => {
-          try {
-            const json = JSON.parse(e.target.result);
-            if (typeof json === "object" && json !== null) {
-              owners = json;
-              saveJSON(OWNERS_KEY, owners);
-              updatePlotColors();
-              applyVisibilityFilters();
-              updateAvailableCount();
-              alert("Sauvegarde restaurée avec succès.");
-            } else {
-              alert("Fichier JSON invalide.");
-            }
-          } catch (err) {
-            console.error(err);
-            alert("Erreur lors du chargement de la sauvegarde.");
-          }
-        };
-        reader.readAsText(file);
-      });
-      input.click();
+      backupFileInput.click();
     });
 
-    function syncOwnersToServer() {
-      fetch(GOOGLE_APPS_SCRIPT_URL, {
-        method: "POST",
-        mode: "no-cors",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ owners })
-      }).catch(err => {
-        console.error("Erreur lors de l'envoi aux Google Sheets", err);
-      });
-    }
+    backupFileInput.addEventListener("change", (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
 
-    function escapeHtml(str) {
-      return String(str).replace(/[&<>"']/g, function(ch) {
-        return ({
-          '&':'&amp;',
-          '<':'&lt;',
-          '>':'&gt;',
-          '"':'&quot;',
-          '\'':'&#039;'
-        }[ch]);
-      });
-    }
-
-    const recBtn = document.getElementById("open-recensement");
-    const recPopup = document.getElementById("recensement-popup");
-    const recClose = document.getElementById("recensement-close");
-    const recSortSelect = document.getElementById("rec-sort");
-    const recSearchInput = document.getElementById("rec-search");
-    const recFilterJobSelect = document.getElementById("rec-filter-job");
-    const tabResidents = document.getElementById("tab-residents");
-    const tabArtisans  = document.getElementById("tab-artisans");
-    const tabRp        = document.getElementById("tab-rp");
-    const recResidentsContent = document.getElementById("rec-residents-content");
-    const recArtisansContent  = document.getElementById("rec-artisans-content");
-    const recRpContent        = document.getElementById("rec-rp-content");
-
-    ["wheel", "mousedown"].forEach(evt => {
-      recPopup.addEventListener(evt, (e) => {
-        e.stopPropagation();
-      }, { passive: true });
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const imported = JSON.parse(reader.result);
+          if (typeof imported !== "object" || imported === null) {
+            throw new Error("JSON invalide");
+          }
+          owners = imported;
+          saveJSON(OWNERS_KEY, owners);
+          updatePlotColors();
+          applyVisibilityFilters();
+          updateAvailableCount();
+          syncOwnersToServer();
+          alert("Sauvegarde chargée avec succès !");
+        } catch (e) {
+          alert("Fichier invalide : impossible de charger la sauvegarde.");
+        } finally {
+          backupFileInput.value = "";
+        }
+      };
+      reader.readAsText(file);
     });
 
-    let currentRecTab = "residents";
+    const popup       = document.getElementById("admin-popup");
+    const passInput   = document.getElementById("admin-pass");
+    const showPass    = document.getElementById("show-pass");
+    const validateBtn = document.getElementById("admin-validate");
+    const adminBtn    = document.getElementById("open-admin");
 
-    function setRecTab(tab) {
-      currentRecTab = tab;
-
-      tabResidents.classList.remove("active");
-      tabArtisans.classList.remove("active");
-      tabRp.classList.remove("active");
-      recResidentsContent.style.display = "none";
-      recArtisansContent.style.display  = "none";
-      recRpContent.style.display        = "none";
-
-      if (tab === "residents") {
-        tabResidents.classList.add("active");
-        recResidentsContent.style.display = "block";
-      } else if (tab === "artisans") {
-        tabArtisans.classList.add("active");
-        recArtisansContent.style.display = "block";
-      } else if (tab === "rp") {
-        tabRp.classList.add("active");
-        recRpContent.style.display = "block";
-      }
-    }
-
-    tabResidents.addEventListener("click", () => {
-      setRecTab("residents");
-    });
-    tabArtisans.addEventListener("click", () => {
-      setRecTab("artisans");
-    });
-    tabRp.addEventListener("click", () => {
-      setRecTab("rp");
+    showPass.addEventListener("change", () => {
+      passInput.type = showPass.checked ? "text" : "password";
     });
 
-    function updateRecensement() {
-      const listDiv = document.getElementById("rec-list");
-      const artisansDiv = document.getElementById("rec-artisans-list");
-      const rpDiv = document.getElementById("rec-rp-list");
-      const totalSpan = document.getElementById("rec-total");
-      const avgSpan = document.getElementById("rec-average");
+    adminBtn.addEventListener("click", () => {
+      popup.style.display = "block";
+      passInput.value = "";
+      passInput.focus();
+    });
 
-      const entries = [];
-      const now = Date.now();
-      let sumDays = 0;
-      let countDays = 0;
-
-      for (const id in owners) {
-        const o = owners[id];
-        const numericId = parseInt(id, 10);
-        entries.push({
-          id: numericId,
-          name: o.name,
-          gender: o.gender || "",
-          since: o.since,
-          jobs: o.jobs || [],
-          timestamp: o.timestamp || null,
-          note: o.note || "",
-          rpShort: o.rpShort || "",
-          rpLong:  o.rpLong  || ""
-        });
-      }
-
-      totalSpan.textContent = entries.length;
-
-      entries.forEach(e => {
-        if (typeof e.timestamp === "number" && !isNaN(e.timestamp)) {
-          const diff = now - e.timestamp;
-          const days = diff / (1000 * 60 * 60 * 24);
-          if (days >= 0) {
-            sumDays += days;
-            countDays++;
-          }
-        }
-      });
-
-      if (countDays === 0) {
-        avgSpan.textContent = "—";
-      } else {
-        const avg = Math.round(sumDays / countDays);
-        avgSpan.textContent = avg + " jours";
-      }
-
-      const query = recSearchInput ? recSearchInput.value.trim().toLowerCase() : "";
-      const filterJob = recFilterJobSelect ? recFilterJobSelect.value : "";
-      const adminMode = localStorage.getItem(ADMIN_FLAG) === "true";
-
-      function matchesSearch(entry) {
-        if (!query) return true;
-        const q = query;
-        if ((entry.name || "").toLowerCase().includes(q)) return true;
-        if (("#" + entry.id).toLowerCase().includes(q)) return true;
-
-        let jobLabelMatch = false;
-        (entry.jobs || []).forEach(j => {
-          const label = getJobLabel(j, entry.gender).toLowerCase();
-          if (label.includes(q)) jobLabelMatch = true;
-        });
-        if (jobLabelMatch) return true;
-
-        for (const word in JOB_SYNONYMS) {
-          if (q.includes(word)) {
-            const jobCode = JOB_SYNONYMS[word];
-            if ((entry.jobs || []).includes(jobCode)) return true;
-          }
-        }
-
-        return false;
-      }
-
-      let residentsEntries = entries.slice();
-      const sortMode = recSortSelect ? recSortSelect.value : "id";
-
-      if (sortMode === "name") {
-        residentsEntries.sort((a, b) =>
-          (a.name || "").localeCompare(b.name || "", "fr", { sensitivity: "base" })
-        );
-      } else if (sortMode === "anciennete") {
-        residentsEntries.sort((a, b) => {
-          const ta = (typeof a.timestamp === "number") ? a.timestamp : Infinity;
-          const tb = (typeof b.timestamp === "number") ? b.timestamp : Infinity;
-          return ta - tb;
-        });
-      } else {
-        residentsEntries.sort((a, b) => (a.id || 0) - (b.id || 0));
-      }
-
-      listDiv.innerHTML = "";
-      residentsEntries.forEach(e => {
-        if (!matchesSearch(e)) return;
-
-        if (filterJob === "none") {
-          if (e.jobs && e.jobs.length) return;
-        } else if (filterJob) {
-          if (!(e.jobs || []).includes(filterJob)) return;
-        }
-
-        const div = document.createElement("div");
-        div.className = "recensement-list-entry";
-        const g = e.gender === "f" ? "Résidente" :
-                  e.gender === "m" ? "Résident" : "Résident·e";
-        const jobLabels = (e.jobs || [])
-          .map(code => getJobLabel(code, e.gender))
-          .filter(Boolean);
-
-        let html =
-          `<span class="gold">#${e.id}</span> — <b>${escapeHtml(e.name)}</b>` +
-          `<br>${g} depuis le ${escapeHtml(e.since)}`;
-        if (jobLabels.length > 0) {
-          html += `<br>Métiers : ${jobLabels.map(escapeHtml).join(", ")}`;
-        }
-        if (adminMode && e.note) {
-          html += `<br><span class="rec-note">Note interne : ${escapeHtml(e.note)}</span>`;
-        }
-
-        div.innerHTML = html;
-        listDiv.appendChild(div);
-
-        div.addEventListener("click", () => {
-          recPopup.style.display = "none";
-          tooltip.style.display = "none";
-          focusOnPlot(e.id);
-        });
-      });
-
-      artisansDiv.innerHTML = "";
-      rpDiv.innerHTML = "";
-
-      const jobsMap = {};
-      residentsEntries.forEach(e => {
-        if (!e.jobs || e.jobs.length === 0) return;
-        (e.jobs || []).forEach(code => {
-          if (!jobsMap[code]) {
-            jobsMap[code] = [];
-          }
-          jobsMap[code].push(e);
-        });
-      });
-
-      const jobCodes = Object.keys(jobsMap).sort((a, b) => {
-        const la = getJobLabel(a, "");
-        const lb = getJobLabel(b, "");
-        return la.localeCompare(lb, "fr", { sensitivity: "base" });
-      });
-
-      jobCodes.forEach(code => {
-        const label = getJobLabel(code, "");
-        if (!label) return;
-        const list = jobsMap[code];
-
-        const filtered = list.filter(e => matchesSearch(e));
-        if (filtered.length === 0) return;
-
-        const section = document.createElement("div");
-        section.className = "artisan-job-section";
-
-        const header = document.createElement("div");
-        header.className = "artisan-job-header";
-
-        const icon = document.createElement("img");
-        icon.className = "artisan-job-icon";
-        icon.src = JOB_ICONS[code] || "";
-        icon.alt = label;
-
-        const titleSpan = document.createElement("span");
-        titleSpan.className = "artisan-job-title";
-        titleSpan.textContent = label;
-
-        header.appendChild(icon);
-        header.appendChild(titleSpan);
-        section.appendChild(header);
-
-        const namesDiv = document.createElement("div");
-        namesDiv.className = "artisan-job-names";
-
-        filtered.forEach((e, idx) => {
-          const span = document.createElement("span");
-          span.className = "artisan-name";
-          span.textContent = e.name;
-          span.dataset.id = e.id;
-
-          span.addEventListener("mouseenter", () => {
-            const rect = span.getBoundingClientRect();
-            showOwnerTooltipById(e.id, rect);
-          });
-          span.addEventListener("mouseleave", () => {
-            tooltip.style.display = "none";
-          });
-
-          span.addEventListener("click", () => {
-            recPopup.style.display = "none";
-            tooltip.style.display = "none";
-            focusOnPlot(e.id);
-          });
-
-          namesDiv.appendChild(span);
-          if (idx < filtered.length - 1) {
-            namesDiv.appendChild(document.createTextNode(", "));
-          }
-        });
-
-        section.appendChild(namesDiv);
-        artisansDiv.appendChild(section);
-      });
-
-      // Onglet Côté RP
-      if (rpDiv) {
-        const rpEntries = residentsEntries.filter(e => {
-          if (!e.rpLong || !e.rpLong.trim()) return false;
-          return matchesSearch(e);
-        });
-
-        if (rpEntries.length === 0) {
-          rpDiv.innerHTML = "<p>Aucun profil RP renseigné pour le moment.</p>";
+    validateBtn.addEventListener("click", async () => {
+      try {
+        const userHash = await sha256(passInput.value);
+        if (userHash === ADMIN_HASH) {
+          popup.style.display = "none";
+          panel.style.display = "block";
+          localStorage.setItem(ADMIN_FLAG, "true");
+          adminBtn.textContent = "✅ Mode Administrateur actif";
         } else {
-          rpEntries.sort((a, b) =>
-            (a.name || "").localeCompare(b.name || "", "fr", { sensitivity: "base" })
-          );
-
-          rpEntries.forEach(e => {
-            const div = document.createElement("div");
-            div.className = "recensement-list-entry";
-
-            let html =
-              `<span class="gold">#${e.id}</span> — <b>${escapeHtml(e.name)}</b>`;
-
-            if (e.rpShort) {
-              html += `<br><i>Côté RP : ${escapeHtml(e.rpShort)}</i>`;
-            }
-
-            html += `<br>${escapeHtml(e.rpLong)}`;
-
-            if (adminMode && e.note) {
-              html += `<br><span class="rec-note">Note interne : ${escapeHtml(e.note)}</span>`;
-            }
-
-            div.innerHTML = html;
-
-            div.addEventListener("click", () => {
-              recPopup.style.display = "none";
-              tooltip.style.display = "none";
-              focusOnPlot(e.id);
-            });
-
-            rpDiv.appendChild(div);
-          });
+          alert("Mot de passe incorrect !");
         }
+      } catch (err) {
+        console.error("Erreur SHA-256 :", err);
+        alert("Erreur technique lors de la vérification du mot de passe.");
       }
-
-    }
-
-    if (recSortSelect) {
-      recSortSelect.addEventListener("change", () => {
-        updateRecensement();
-      });
-    }
-
-    if (recSearchInput) {
-      recSearchInput.addEventListener("input", () => {
-        updateRecensement();
-      });
-    }
-
-    if (recFilterJobSelect) {
-      recFilterJobSelect.addEventListener("change", () => {
-        updateRecensement();
-      });
-    }
-
-    recBtn.addEventListener("click", () => {
-      setRecTab("residents");
-      updateRecensement();
-      recPopup.style.display = "block";
     });
 
-    recClose.addEventListener("click", () => {
-      recPopup.style.display = "none";
-      tooltip.style.display = "none";
+    passInput.addEventListener("keydown", e => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        validateBtn.click();
+      }
     });
 
-    function initRecensementFilterJobs() {
-      const jobSet = new Set();
-      for (const id in owners) {
-        const o = owners[id];
-        if (o.jobs && o.jobs.length > 0) {
-          o.jobs.forEach(code => jobSet.add(code));
-        }
+    document.getElementById("admin-disconnect").addEventListener("click", () => {
+      localStorage.removeItem(ADMIN_FLAG);
+      panel.style.display = "none";
+      adminBtn.textContent = "🔑 Mode Administrateur";
+      alert("Déconnecté du mode administrateur.");
+    });
+
+    if (localStorage.getItem(ADMIN_FLAG) === "true") {
+      panel.style.display = "block";
+      adminBtn.textContent = "✅ Mode Administrateur actif";
+    }
+
+    const mapContainer = document.querySelector(".map-container");
+    const mapInner     = document.querySelector(".map-inner");
+
+    let zoomLevel = 1;
+    let translateX = 0;
+    let translateY = 0;
+    const ZOOM_MIN = 0.5;
+    const ZOOM_MAX = 3.0;
+
+    function applyTransform() {
+      const cw = mapContainer.clientWidth;
+      const ch = mapContainer.clientHeight;
+
+      const iw = cw * zoomLevel;
+      const ih = ch * zoomLevel;
+
+      if (zoomLevel <= 1) {
+        translateX = (cw - iw) / 2;
+        translateY = (ch - ih) / 2;
+      } else {
+        const minX = cw - iw;
+        const maxX = 0;
+        const minY = ch - ih;
+        const maxY = 0;
+
+        if (translateX < minX) translateX = minX;
+        if (translateX > maxX) translateX = maxX;
+        if (translateY < minY) translateY = minY;
+        if (translateY > maxY) translateY = maxY;
       }
-      if (!recFilterJobSelect) return;
-      recFilterJobSelect.innerHTML = "";
-      const optAll = document.createElement("option");
-      optAll.value = "";
-      optAll.textContent = "(Tous les métiers)";
-      recFilterJobSelect.appendChild(optAll);
 
-      const optNone = document.createElement("option");
-      optNone.value = "none";
-      optNone.textContent = "Sans métier";
-      recFilterJobSelect.appendChild(optNone);
-
-      Array.from(jobSet).sort((a, b) => getJobLabel(a, "").localeCompare(getJobLabel(b, ""), "fr", { sensitivity: "base" }))
-        .forEach(code => {
-          const opt = document.createElement("option");
-          opt.value = code;
-          opt.textContent = getJobLabel(code, "");
-          recFilterJobSelect.appendChild(opt);
-        });
+      mapInner.style.transform =
+        "translate(" + translateX + "px, " + translateY + "px) scale(" + zoomLevel + ")";
     }
 
-    function init() {
-      populatePlotsSelect();
-      updatePlotColors();
-      applyVisibilityFilters();
-      updateAvailableCount();
-      initRecensementFilterJobs();
+    function focusOnPlot(id) {
+      const plot = document.getElementById("plot" + id);
+      if (!plot) return;
+
+      zoomLevel = ZOOM_MAX;
+
+      const containerRect = mapContainer.getBoundingClientRect();
+      const cx = containerRect.width / 2;
+      const cy = containerRect.height / 2;
+
+      const offsetX = plot.offsetLeft + plot.offsetWidth / 2;
+      const offsetY = plot.offsetTop + plot.offsetHeight / 2;
+
+      translateX = cx - offsetX * zoomLevel;
+      translateY = cy - offsetY * zoomLevel;
+
+      applyTransform();
+
+      plot.classList.add("focus-highlight");
+      setTimeout(() => {
+        plot.classList.remove("focus-highlight");
+      }, 1200);
     }
 
-    window.addEventListener("load", init);
+    mapContainer.addEventListener("wheel", (e) => {
+      e.preventDefault();
+
+      const rect = mapContainer.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      const mouseY = e.clientY - rect.top;
+
+      const prevZoom = zoomLevel;
+
+      if (e.deltaY < 0) zoomLevel *= 1.1;
+      else zoomLevel *= 0.9;
+
+      if (zoomLevel < ZOOM_MIN) zoomLevel = ZOOM_MIN;
+      if (zoomLevel > ZOOM_MAX) zoomLevel = ZOOM_MAX;
+
+      const offsetX = (mouseX - translateX) / prevZoom;
+      const offsetY = (mouseY - translateY) / prevZoom;
+
+      translateX = mouseX - offsetX * zoomLevel;
+      translateY = mouseY - offsetY * zoomLevel;
+
+      applyTransform();
+    }, { passive: false });
+
+    let panning = false;
+    let startX = 0, startY = 0, startTX = 0, startTY = 0;
+
+    mapContainer.addEventListener("mousedown", (e) => {
+      if (e.button !== 0) return;
+      panning = true;
+      startX = e.clientX;
+      startY = e.clientY;
+      startTX = translateX;
+      startTY = translateY;
+    });
+
+    window.addEventListener("mousemove", (e) => {
+      if (!panning) return;
+      translateX = startTX + (e.clientX - startX);
+      translateY = startTY + (e.clientY - startY);
+      applyTransform();
+    });
+
+    window.addEventListener("mouseup", () => {
+      panning = false;
+    });
+
+    updatePlotColors();
+    applyVisibilityFilters();
+    updateAvailableCount();
+    applyTransform();
+    fetchOwnersFromServer();
   </script>
+
 </body>
 </html>
