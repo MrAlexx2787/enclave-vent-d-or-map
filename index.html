@@ -954,12 +954,22 @@ function showOwnerTooltipById(id, rect) {
     }
   }
 
-  // Côté RP
-  if (o.rpShort) {
-    lines.push(
-      `<span class="tooltip-label">Côté RP :</span> ` +
-      escapeHtml(o.rpShort)
-    );
+ // Côté RP (RP court ou par défaut)
+let rpText = "";
+if (o.rpShort && o.rpShort.trim() !== "") {
+  rpText = o.rpShort.trim();
+} else {
+  // Déterminer la version par genre
+  if (g === "m") rpText = "Résident";
+  else if (g === "f") rpText = "Résidente";
+  else rpText = "Résident·e";
+}
+
+lines.push(
+  `<span class="tooltip-label">Côté RP :</span> ` +
+  escapeHtml(rpText)
+);
+
   }
 
   // Parcelle
