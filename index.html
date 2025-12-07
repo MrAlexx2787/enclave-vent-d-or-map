@@ -937,9 +937,10 @@ function showOwnerTooltipById(id, rect) {
   if (g === "m") t = "Résident";
 
   tooltipTitle.textContent = o.name;
+
   const lines = [];
 
-  // ligne "depuis le..."
+  // Ligne "résident depuis"
   lines.push(`${t} depuis le ${escapeHtml(o.since)}`);
 
   // Métiers
@@ -953,19 +954,13 @@ function showOwnerTooltipById(id, rect) {
     }
   }
 
-  // Côté RP (court ou texte par défaut)
-  let rpText = "";
-  if (o.rpShort && o.rpShort.trim() !== "") {
-    rpText = o.rpShort.trim();
-  } else {
-    if (g === "m") rpText = "Résident";
-    else if (g === "f") rpText = "Résidente";
-    else rpText = "Résident·e";
+  // Côté RP
+  if (o.rpShort) {
+    lines.push(
+      `<span class="tooltip-label">Côté RP :</span> ` +
+      escapeHtml(o.rpShort)
+    );
   }
-  lines.push(
-    `<span class="tooltip-label">Côté RP :</span> ` +
-    escapeHtml(rpText)
-  );
 
   // Parcelle
   lines.push(
