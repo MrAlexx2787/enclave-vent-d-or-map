@@ -1381,10 +1381,17 @@ function showOwnerTooltipById(id, rect) {
         nameSpan.textContent = e.name;
 
         const roleText = document.createElement("span");
+        const gLabel =
+          e.gender === "f" ? "Résidente" :
+          e.gender === "m" ? "Résident"  :
+                             "Résident·e";
+
         if (e.rpShort) {
-          roleText.textContent = ", " + e.rpShort + " de l'enclave.";
+          // RP court fourni → on l’affiche tel quel, sans "de l'enclave"
+          roleText.textContent = ", " + e.rpShort + ".";
         } else {
-          roleText.textContent = ", Résident·e de l'enclave.";
+          // Pas de RP court → texte par défaut accordé en genre
+          roleText.textContent = ", " + gLabel + ".";
         }
 
         const br1 = document.createElement("br");
