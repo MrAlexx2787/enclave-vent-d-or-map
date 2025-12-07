@@ -472,6 +472,16 @@
       font-style: italic;
       font-size: 11px;
     }
+
+    /* Petit style pour l’onglet Côté RP */
+    #rec-rp-list .rp-name {
+      font-weight: bold;
+      color: #ffd100;
+    }
+    #rec-rp-list .rp-desc {
+      font-style: italic;
+      color: #dddddd;
+    }
   </style>
 </head>
 
@@ -647,12 +657,13 @@
           <p>
             <span class="gold">Recherche :</span><br>
             <input id="rec-search" type="text"
-                   placeholder="Nom, numéro #, métier, forgeron, mineur, pêcheur..." />
+                   placeholder="Nom, numéro #, métier, forgeron, mineur, pêcheur, côté RP..." />
           </p>
 
           <div class="recensement-tabs">
             <div class="rec-tab active" id="tab-residents">Résidents</div>
             <div class="rec-tab" id="tab-artisans">Artisans</div>
+            <div class="rec-tab" id="tab-rp">Côté RP</div>
           </div>
 
           <div id="rec-residents-content" class="rec-tab-content">
@@ -661,6 +672,10 @@
 
           <div id="rec-artisans-content" class="rec-tab-content" style="display:none;">
             <div id="rec-artisans-list"></div>
+          </div>
+
+          <div id="rec-rp-content" class="rec-tab-content" style="display:none;">
+            <div id="rec-rp-list"></div>
           </div>
         </div>
       </div>
@@ -713,14 +728,25 @@
       </div>
 
       <div class="form-row">
-      <label>Métiers (jusqu'à 5) :</label>
-      <select id="job1"></select>
-      <select id="job2"></select>
-      <select id="job3"></select>
-      <select id="job4"></select>
-      <select id="job5"></select>
+        <label>Métiers (jusqu'à 5) :</label>
+        <select id="job1"></select>
+        <select id="job2"></select>
+        <select id="job3"></select>
+        <select id="job4"></select>
+        <select id="job5"></select>
       </div>
 
+      <!-- NOUVEAU : Côté RP -->
+      <div class="form-row">
+        <label for="owner-rp-short">Côté RP (court) :</label>
+        <input type="text" id="owner-rp-short" placeholder="Ex : Tavernier, Archiviste..." />
+      </div>
+
+      <div class="form-row">
+        <label for="owner-rp-long">Description RP :</label>
+        <textarea id="owner-rp-long" rows="3" cols="40"
+          placeholder="Texte RP détaillé : rôle, ambiance, anecdote..."></textarea>
+      </div>
 
       <div class="form-row">
         <label for="owner-note">Note interne :</label>
@@ -881,7 +907,7 @@
       "depeceur":     "depecage",
       "dépeceuse":    "depecage",
       "depeceuse":    "depecage",
-      "archéologie":  "archeologie",   // quelques synonymes bonus
+      "archéologie":  "archeologie",
       "archeologie":  "archeologie",
       "archéologue":  "archeologie",
       "archeologue":  "archeologie"
@@ -915,6 +941,12 @@
           lines.push("Métiers : " + labels.join(", "));
         }
       }
+
+      // NOUVEAU : Côté RP dans le tooltip
+      if (o.rpShort) {
+        lines.push("Côté RP : " + escapeHtml(o.rpShort));
+      }
+
       lines.push(`Parcelle : #${id}`);
 
       tooltipBody.innerHTML = lines.join("<br>");
@@ -1039,8 +1071,10 @@
     const recFilterJobSelect = document.getElementById("rec-filter-job");
     const tabResidents = document.getElementById("tab-residents");
     const tabArtisans  = document.getElementById("tab-artisans");
+    const tabRP        = document.getElementById("tab-rp");
     const recResidentsContent = document.getElementById("rec-residents-content");
     const recArtisansContent  = document.getElementById("rec-artisans-content");
+    const recRPContent        = document.getElementById("rec-rp-content");
 
     ["wheel", "mousedown"].forEach(evt => {
       recPopup.addEventListener(evt, (e) => {
@@ -1052,16 +1086,24 @@
 
     function setRecTab(tab) {
       currentRecTab = tab;
+
+      // reset classes
+      tabResidents.classList.remove("active");
+      tabArtisans.classList.remove("active");
+      tabRP.classList.remove("active");
+      recResidentsContent.style.display = "none";
+      recArtisansContent.style.display  = "none";
+      recRPContent.style.display        = "none";
+
       if (tab === "residents") {
         tabResidents.classList.add("active");
-        tabArtisans.classList.remove("active");
         recResidentsContent.style.display = "block";
-        recArtisansContent.style.display  = "none";
-      } else {
-        tabResidents.classList.remove("active");
+      } else if (tab === "artisans") {
         tabArtisans.classList.add("active");
-        recResidentsContent.style.display = "none";
-        recArtisansContent.style.display  = "block";
+        recArtisansContent.style.display = "block";
+      } else if (tab === "rp") {
+        tabRP.classList.add("active");
+        recRPContent.style.display = "block";
       }
     }
 
@@ -1071,10 +1113,14 @@
     tabArtisans.addEventListener("click", () => {
       setRecTab("artisans");
     });
+    tabRP.addEventListener("click", () => {
+      setRecTab("rp");
+    });
 
     function updateRecensement() {
       const listDiv = document.getElementById("rec-list");
       const artisansDiv = document.getElementById("rec-artisans-list");
+      const rpListDiv = document.getElementById("rec-rp-list");
       const totalSpan = document.getElementById("rec-total");
       const avgSpan = document.getElementById("rec-average");
 
@@ -1093,7 +1139,9 @@
           since: o.since,
           jobs: o.jobs || [],
           timestamp: o.timestamp || null,
-          note: o.note || ""
+          note: o.note || "",
+          rpShort: o.rpShort || "",
+          rpLong: o.rpLong || ""
         });
       }
 
@@ -1130,6 +1178,7 @@
 
         if (String(entry.id).includes(q)) return true;
 
+        // métiers
         let jobLabelMatch = false;
         (entry.jobs || []).forEach(j => {
           const label = getJobLabel(j, entry.gender).toLowerCase();
@@ -1137,12 +1186,18 @@
         });
         if (jobLabelMatch) return true;
 
+        // synonymes de métiers
         for (const word in JOB_SYNONYMS) {
           if (q.includes(word)) {
             const jobCode = JOB_SYNONYMS[word];
             if ((entry.jobs || []).includes(jobCode)) return true;
           }
         }
+
+        // NOUVEAU : recherche dans le RP
+        const rpS = (entry.rpShort || "").toLowerCase();
+        const rpL = (entry.rpLong || "").toLowerCase();
+        if (rpS.includes(q) || rpL.includes(q)) return true;
 
         return false;
       }
@@ -1164,6 +1219,7 @@
         residentsEntries.sort((a, b) => a.id - b.id);
       }
 
+      // --- Onglet Résidents ---
       listDiv.innerHTML = "";
       residentsEntries.forEach(e => {
         if (!matchesSearch(e)) return;
@@ -1196,6 +1252,7 @@
         listDiv.appendChild(div);
       });
 
+      // --- Onglet Artisans ---
       artisansDiv.innerHTML = "";
 
       const jobsMap = {};
@@ -1219,7 +1276,15 @@
         if (!label) return;
         const list = jobsMap[code];
 
-        const filtered = list.filter(e => matchesSearch(e));
+        const filtered = list.filter(e => {
+          if (!matchesSearch(e)) return false;
+          if (filterJob === "none") {
+            if (e.jobs && e.jobs.length) return false;
+          } else if (filterJob) {
+            if (!(e.jobs || []).includes(filterJob)) return false;
+          }
+          return true;
+        });
         if (filtered.length === 0) return;
 
         const section = document.createElement("div");
@@ -1273,6 +1338,78 @@
         section.appendChild(namesDiv);
         artisansDiv.appendChild(section);
       });
+
+      // --- NOUVEL ONGLET : Côté RP ---
+      rpListDiv.innerHTML = "";
+
+      const rpEntries = residentsEntries.filter(e =>
+        (e.rpShort && e.rpShort.trim()) || (e.rpLong && e.rpLong.trim())
+      );
+
+      rpEntries.forEach(e => {
+        if (!matchesSearch(e)) return;
+
+        if (filterJob === "none") {
+          if (e.jobs && e.jobs.length) return;
+        } else if (filterJob) {
+          if (!(e.jobs || []).includes(filterJob)) return;
+        }
+
+        const div = document.createElement("div");
+        div.className = "recensement-list-entry";
+
+        const nameSpan = document.createElement("span");
+        nameSpan.className = "rp-name";
+        nameSpan.textContent = e.name;
+
+        const roleText = document.createElement("span");
+        if (e.rpShort) {
+          roleText.textContent = ", " + e.rpShort + " de l'enclave.";
+        } else {
+          roleText.textContent = ", Résident·e de l'enclave.";
+        }
+
+        const br1 = document.createElement("br");
+
+        const desc = document.createElement("span");
+        desc.className = "rp-desc";
+        if (e.rpLong) {
+          desc.textContent = '"' + e.rpLong + '"';
+        } else {
+          desc.textContent = "";
+        }
+
+        const br2 = document.createElement("br");
+        const parcelle = document.createElement("span");
+        parcelle.textContent = "Parcelle : #" + e.id;
+
+        div.appendChild(nameSpan);
+        div.appendChild(roleText);
+        div.appendChild(br1);
+        if (e.rpLong) {
+          div.appendChild(desc);
+          div.appendChild(br2);
+        }
+        div.appendChild(parcelle);
+
+        // Survol du nom → tooltip
+        nameSpan.addEventListener("mouseenter", () => {
+          const rect = nameSpan.getBoundingClientRect();
+          showOwnerTooltipById(e.id, rect);
+        });
+        nameSpan.addEventListener("mouseleave", () => {
+          tooltip.style.display = "none";
+        });
+
+        // Clic sur l'entrée → focus sur la parcelle
+        div.addEventListener("click", () => {
+          recPopup.style.display = "none";
+          tooltip.style.display = "none";
+          focusOnPlot(e.id);
+        });
+
+        rpListDiv.appendChild(div);
+      });
     }
 
     if (recSortSelect) {
@@ -1316,6 +1453,8 @@
     const job3         = document.getElementById("job3");
     const job4         = document.getElementById("job4");
     const job5         = document.getElementById("job5");
+    const rpShortInput = document.getElementById("owner-rp-short");
+    const rpLongInput  = document.getElementById("owner-rp-long");
     const noteInput    = document.getElementById("owner-note");
     const deleteBtn    = document.getElementById("delete-owner");
     const generateDeedBtn = document.getElementById("generate-deed");
@@ -1398,7 +1537,7 @@
       { value: "mine",         label: "Minage" },
       { value: "herboristerie",label: "Herboristerie" },
       { value: "depecage",     label: "Dépeçage" },
-      { value: "archeologie",  label: "Archéologie" } // ← nouveau dans la liste
+      { value: "archeologie",  label: "Archéologie" }
     ];
 
     function fillJobSelect(sel) {
@@ -1438,80 +1577,78 @@
       });
     })();
 
-function refreshJobDropdowns() {
-  const selects = [job1, job2, job3, job4, job5];
+    function refreshJobDropdowns() {
+      const selects = [job1, job2, job3, job4, job5];
 
-  // valeurs actuellement choisies (non vides)
-  const chosen = selects
-    .map(s => s.value)
-    .filter(v => v !== "");
+      const chosen = selects
+        .map(s => s.value)
+        .filter(v => v !== "");
 
-  selects.forEach(sel => {
-    const current = sel.value;
+      selects.forEach(sel => {
+        const current = sel.value;
 
-    Array.from(sel.options).forEach(opt => {
-      const val = opt.value;
+        Array.from(sel.options).forEach(opt => {
+          const val = opt.value;
 
-      // "(Rien)" jamais désactivé
-      if (val === "") {
-        opt.disabled = false;
-        return;
-      }
+          if (val === "") {
+            opt.disabled = false;
+            return;
+          }
 
-      // si ce métier est choisi ailleurs, on le grise
-      if (chosen.includes(val) && val !== current) {
-        opt.disabled = true;
-      } else {
-        opt.disabled = false;
-      }
+          if (chosen.includes(val) && val !== current) {
+            opt.disabled = true;
+          } else {
+            opt.disabled = false;
+          }
+        });
+      });
+    }
+
+    [job1, job2, job3, job4, job5].forEach(sel => {
+      sel.addEventListener("change", refreshJobDropdowns);
     });
-  });
-}
 
-[job1, job2, job3, job4, job5].forEach(sel => {
-  sel.addEventListener("change", refreshJobDropdowns);
-});
-
-// état initial propre
-refreshJobDropdowns();
+    refreshJobDropdowns();
 
     function refreshForm(id) {
       const o = owners[id];
       if (!o) {
-  inputName.value = "";
-  selectGender.value = "";
-  daySelect.value = "";
-  monthSelect.value = "";
-  yearSelect.value = "";
-  job1.value = "";
-  job2.value = "";
-  job3.value = "";
-  job4.value = "";
-  job5.value = "";
-  noteInput.value = "";
-  refreshJobDropdowns();
-  return;
-
+        inputName.value = "";
+        selectGender.value = "";
+        daySelect.value = "";
+        monthSelect.value = "";
+        yearSelect.value = "";
+        job1.value = "";
+        job2.value = "";
+        job3.value = "";
+        job4.value = "";
+        job5.value = "";
+        rpShortInput.value = "";
+        rpLongInput.value = "";
+        noteInput.value = "";
+        refreshJobDropdowns();
+        return;
       }
       inputName.value = o.name || "";
       selectGender.value = o.gender || "";
       if (typeof o.day === "number") daySelect.value = o.day;
       else daySelect.value = "";
       if (typeof o.month === "number") monthSelect.value = o.month;
-      else monthSelect.value = "";
+      else daySelect.value = "";
       if (typeof o.year === "number") yearSelect.value = o.year;
       else yearSelect.value = "";
 
-const jobs = o.jobs || [];
-job1.value = jobs[0] || "";
-job2.value = jobs[1] || "";
-job3.value = jobs[2] || "";
-job4.value = jobs[3] || "";
-job5.value = jobs[4] || "";
+      const jobs = o.jobs || [];
+      job1.value = jobs[0] || "";
+      job2.value = jobs[1] || "";
+      job3.value = jobs[2] || "";
+      job4.value = jobs[3] || "";
+      job5.value = jobs[4] || "";
 
-noteInput.value = o.note || "";
-refreshJobDropdowns();
-
+      rpShortInput.value = o.rpShort || "";
+      rpLongInput.value  = o.rpLong || "";
+      noteInput.value = o.note || "";
+      refreshJobDropdowns();
     }
 
     selectPlot.addEventListener("change", () => {
@@ -1550,15 +1687,17 @@ refreshJobDropdowns();
       const since = day + " " + monthLabel + " " + year;
       const timestamp = new Date(year, monthIndex, day).getTime();
 
-const jobs = [];
-[job1, job2, job3, job4, job5].forEach(sel => {
-  const val = sel.value;
-  if (val && !jobs.includes(val)) {
-    jobs.push(val); // sécurité anti-doublon dans les données
-  }
-});
+      const jobs = [];
+      [job1, job2, job3, job4, job5].forEach(sel => {
+        const val = sel.value;
+        if (val && !jobs.includes(val)) {
+          jobs.push(val);
+        }
+      });
 
       const note = noteInput.value.trim();
+      const rpShort = rpShortInput.value.trim();
+      const rpLong  = rpLongInput.value.trim();
 
       owners[id] = {
         name,
@@ -1569,7 +1708,9 @@ const jobs = [];
         month: monthIndex,
         year,
         jobs,
-        note
+        note,
+        rpShort,
+        rpLong
       };
 
       saveJSON(OWNERS_KEY, owners);
